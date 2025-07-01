@@ -1,0 +1,11 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/repair_tracking_prod_db
+    username: postgres
+    password: ${postgres_password}
+    driver-class-name: org.postgresql.Driver
+
+    jpa:
+      hibernate:
+        ddl-auto: validate  # Never use 'update' or 'create' on production, better 'validate'!
+      show-sql: false

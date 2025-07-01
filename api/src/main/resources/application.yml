@@ -1,0 +1,14 @@
+spring:
+  mvc:
+    pathMatch:
+      matching-strategy: ant_path_matcher
+  profiles:
+    active: dev
+
+
+springdoc:
+  override-with-generic-response: false
+server:
+  port: 8088
+jwt:
+  secret: 1F295B43EF4E71142171566813FC913264B0F95DD20DEB1610320AC5B687ECDB
