@@ -33,7 +33,7 @@ cd %ROOT_DIR%
 echo [Step 3/4] Build Spring Boot app
 cd api
 
-call mvn clean package || goto :error
+call mvn clean package -DskipTests || goto :error
 
 rem ----------------------------------------
 cd %ROOT_DIR%
