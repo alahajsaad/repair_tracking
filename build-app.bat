@@ -1,21 +1,52 @@
 @echo off
-echo Build React app
+echo ========================================
+echo === Build & package repair tracking app
+echo ========================================
+
+rem Save current folder
+set ROOT_DIR=%cd%
+
+rem ----------------------------------------
+echo [Step 1/4] Build React app
 cd ui
-call npm install
-call npm run build
 
-echo Copy React build to Spring Boot static folder
+echo Installing npm dependencies...
+call npm install || goto :error
+
+echo Running React build...
+call npm run build || goto :error
+
+rem ----------------------------------------
+echo [Step 2/4] Copy React build to Spring Boot static folder
+
 cd build
-xcopy * "..\..\api\src\main\resources\static" /E /I /Y
+rem Clean existing static folder
+rmdir /S /Q "%ROOT_DIR%\api\src\main\resources\static"
+mkdir "%ROOT_DIR%\api\src\main\resources\static"
 
-cd ..\..
+echo Copying build to static folder...
+xcopy * "%ROOT_DIR%\api\src\main\resources\static" /E /I /Y || goto :error
 
-echo Build Spring Boot app
+rem ----------------------------------------
+cd %ROOT_DIR%
+
+echo [Step 3/4] Build Spring Boot app
 cd api
-call mvn clean package
 
-cd ..
-echo Build complete!
+call mvn clean package || goto :error
+
+rem ----------------------------------------
+cd %ROOT_DIR%
+
+echo ========================================
+echo Build complete! Check api\target\*.jar
+echo ========================================
 pause
+exit /b 0
 
-
+:error
+echo ========================================
+echo BUILD FAILED! See error above.
+echo ========================================
+pause
+exit /b 1
