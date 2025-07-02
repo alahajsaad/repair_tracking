@@ -19,9 +19,12 @@ call npm run build || goto :error
 rem ----------------------------------------
 echo [Step 2/4] Copy React build to Spring Boot static folder
 
-cd build
+cd dist
+
 rem Clean existing static folder
-rmdir /S /Q "%ROOT_DIR%\api\src\main\resources\static"
+if exist "%ROOT_DIR%\api\src\main\resources\static" (
+    rmdir /S /Q "%ROOT_DIR%\api\src\main\resources\static"
+)
 mkdir "%ROOT_DIR%\api\src\main\resources\static"
 
 echo Copying build to static folder...
@@ -34,6 +37,14 @@ echo [Step 3/4] Build Spring Boot app
 cd api
 
 call mvn clean package -DskipTests || goto :error
+
+echo [Step 4/4] Run Spring Boot JAR with 'prod' profile
+cd target
+
+for %%F in (*.jar) do (
+    echo Running: java -jar %%F --spring.profiles.active=prod
+    java -jar %%F --spring.profiles.active=prod || goto :error
+)
 
 rem ----------------------------------------
 cd %ROOT_DIR%
