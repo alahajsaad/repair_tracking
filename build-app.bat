@@ -1,6 +1,6 @@
 @echo off
 echo ========================================
-echo === Build & package repair tracking app
+echo === Build and package repair tracking app
 echo ========================================
 
 rem Save current folder
