@@ -38,13 +38,21 @@ cd api
 
 call mvn clean package -DskipTests || goto :error
 
-@REM echo [Step 4/4] Run Spring Boot JAR with 'prod' profile
-@REM cd target
-@REM
-@REM for %%F in (*.jar) do (
-@REM     echo Running: java -jar %%F --spring.profiles.active=prod
-@REM     java -jar %%F --spring.profiles.active=prod || goto :error
-@REM )
+rem ----------------------------------------
+echo [Step 4/4] Copy JAR to deployment folder
+
+set JAR_SOURCE=C:\Users\MSI\.jenkins\workspace\repair_tracking_build_job\api\target
+set JAR_DEST=F:\repair_tracking_app
+
+echo Ensuring destination folder exists...
+if not exist "%JAR_DEST%" (
+    mkdir "%JAR_DEST%"
+)
+
+echo Copying JAR from %JAR_SOURCE% to %JAR_DEST%...
+xcopy "%JAR_SOURCE%\*.jar" "%JAR_DEST%" /Y || goto :error
+
+
 
 rem ----------------------------------------
 cd %ROOT_DIR%
