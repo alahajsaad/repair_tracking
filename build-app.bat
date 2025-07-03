@@ -38,13 +38,13 @@ cd api
 
 call mvn clean package -DskipTests || goto :error
 
-echo [Step 4/4] Run Spring Boot JAR with 'prod' profile
-cd target
-
-for %%F in (*.jar) do (
-    echo Running: java -jar %%F --spring.profiles.active=prod
-    java -jar %%F --spring.profiles.active=prod || goto :error
-)
+@REM echo [Step 4/4] Run Spring Boot JAR with 'prod' profile
+@REM cd target
+@REM
+@REM for %%F in (*.jar) do (
+@REM     echo Running: java -jar %%F --spring.profiles.active=prod
+@REM     java -jar %%F --spring.profiles.active=prod || goto :error
+@REM )
 
 rem ----------------------------------------
 cd %ROOT_DIR%
