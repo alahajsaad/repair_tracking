@@ -1,6 +1,6 @@
 package com.alabenhajsaad.api.business.reparation;
 
-import com.alabenhajsaad.api.business.details.Details;
+import com.alabenhajsaad.api.business.reparation_details.ReparationDetails;
 import com.alabenhajsaad.api.business.machine.Machine;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -29,7 +29,7 @@ public class Reparation {
     private RepairState state ;
 
     @OneToMany(mappedBy = "reparation", cascade = CascadeType.REMOVE, orphanRemoval = true)
-    private List<Details> detailsList;
+    private List<ReparationDetails> detailsList;
 
     @ManyToOne
     private Machine machine ;

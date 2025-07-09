@@ -42,7 +42,7 @@ public class MachineServiceImpl implements MachineService {
 
     @Override
     public List<Machine> getMachinesByClientID(int id) {
-        return repository.findMachinesByClientId(id);
+        return repository.findMachinesByPartnerId(id);
     }
 
     public void deleteMachineById(Integer id) {
