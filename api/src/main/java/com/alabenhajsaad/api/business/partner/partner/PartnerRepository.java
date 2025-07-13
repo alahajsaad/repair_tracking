@@ -52,10 +52,10 @@ LEFT JOIN organization o ON o.id = p.id
 WHERE p.partnerType = :partnerType
 AND (
     :searchTerm IS NULL OR :searchTerm = ''
-    OR (
-        (p.entityType = 'PERSON' AND CONCAT(pe.firstName, ' ', pe.lastName) LIKE CONCAT('%', :searchTerm, '%'))
-        OR (p.entityType = 'ORGANIZATION' AND o.companyName LIKE CONCAT('%', :searchTerm, '%'))
-    )
+     OR (
+             (p.entityType = 'PERSON' AND LOWER(CONCAT(pe.firstName, ' ', pe.lastName)) LIKE LOWER(CONCAT('%', :searchTerm, '%')))
+             OR (p.entityType = 'ORGANIZATION' AND LOWER(o.companyName) LIKE LOWER(CONCAT('%', :searchTerm, '%')))
+     )
 )
 """)
     Page<Partner> findPartners(

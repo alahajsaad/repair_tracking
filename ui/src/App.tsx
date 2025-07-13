@@ -7,7 +7,7 @@ import PartnerDetails from './features/partner/pages/PartnerDetails';
 import ConsultPartnersPage from './features/partner/pages/ConsultPartnersPage';
 import DashboardLayout from './utils/DashBoardLayout';
 import Dashboard from './features/dashboard/dashboard';
-import AddReparation from './features/reparation/AddReparation';
+import AddReparation from './features/reparation/AddReparationForm';
 import ConsultReparations from './features/reparation/ConsultReparations';
 import ReparationDetails from './features/reparation/ReparationDetails';
 import MachineForm from './features/machine/MachineForm';

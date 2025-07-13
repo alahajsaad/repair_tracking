@@ -4,7 +4,7 @@ import { Page } from "src/types";
 type TableNavProps<T> = {
   data: Page<T>;
   page: number;
-  setPage: React.Dispatch<React.SetStateAction<number>>;
+  setPage: (page: number) =>void;
 };
 
 const TableNav = <T,>({ data, page, setPage }: TableNavProps<T>) => {

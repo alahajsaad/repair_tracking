@@ -24,7 +24,7 @@ export type MachineSchemaType = z.infer<typeof formSchema>;
 
 const MachineForm: React.FC = () => {
     const [partner,setPartner] =useState<DynamicPartner>()
-    const {mutate:addMachine , isPending} = useAddMachine()
+    const {mutate:addMachine } = useAddMachine()
     const { 
         register, 
         handleSubmit, 

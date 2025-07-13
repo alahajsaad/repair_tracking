@@ -30,7 +30,7 @@ public class MachineController {
         return ResponseEntity.ok(ApiResponse.success(machine)) ;
     }
 
-    @GetMapping("/get/byClientId/{id}")
+    @GetMapping("client/{id}")
     public  ResponseEntity<ApiResponse<List<Machine>>> getMachinesByClientId(@PathVariable int id){
         List<Machine> machines =  serviceMachine.getMachinesByClientID(id) ;
         return ResponseEntity.ok(ApiResponse.success(machines)) ;

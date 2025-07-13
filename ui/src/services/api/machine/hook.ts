@@ -1,6 +1,6 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { Machine, MachineCreationDto } from "./types";
-import { addMachine, updateMachine } from "./api";
+import { addMachine, getMachinesByClientId, updateMachine } from "./api";
 import { ApiResponse } from "@/types";
 
 
@@ -28,5 +28,20 @@ export const useUpadteMachine = () => {
         }
         return response as ApiResponse<Machine>;
       }),
+  });
+};
+
+
+export const useGetMachinesByClientId = (id: number | undefined) => {
+  return useQuery<ApiResponse<Machine[]>, Error>({
+    queryKey: ['clientMachines', id],
+    queryFn: () =>
+      getMachinesByClientId(id!).then(response => {
+        if (response.status === 'error') {
+          throw new Error(response.message);
+        }
+        return response as ApiResponse<Machine[]>;
+      }),
+    enabled: !!id && id > 0, 
   });
 };

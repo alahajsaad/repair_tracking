@@ -26,7 +26,7 @@ public class Reparation {
     private LocalDate releaseDate ;
 
     @Enumerated(EnumType.STRING)
-    private RepairState state ;
+    private RepairStatus repairStatus ;
 
     @OneToMany(mappedBy = "reparation", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<ReparationDetails> detailsList;

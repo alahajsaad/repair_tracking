@@ -1,0 +1,38 @@
+import { Machine } from "../machine/types"
+
+export type ReparationCreationDto = {
+    callNumber:string
+    customerComplaint:string
+    machine:{
+        id:number
+    }
+}
+
+export type RepairStatus ="ALL" | "IN_PROGRESS" | "COMPLETED" | "DELIVERED"
+export type ReparationDetails = {
+    id:number
+    description:string
+    price:number
+}
+export type Reparation = {
+    id:number
+    callNumber:string
+    customerComplaint:string
+    entryDate:string
+    releaseDate:string
+    repairStatus:RepairStatus
+    detailsList:ReparationDetails[]
+    machine:Machine
+
+}
+
+
+export type GetReparationParams = {
+    fromDate?:string
+    toDate?:string
+    repairStatus?:RepairStatus
+    partnerId?:number
+    machineId?:number
+    page?:number
+    size?:number
+}

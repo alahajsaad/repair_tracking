@@ -18,10 +18,10 @@ const SearchInput: React.FC<SearchInputProps> = ({ setSearchKey, isPending , lab
   const [searchValue, setSearchValue] = useState<string>("");
   const debouncedSearchValue = useDebounce(searchValue, 300);
 
-  useEffect(()=>{
-    if(value)
-    setSearchValue(value)
-  },[value])
+  useEffect(() => {
+    setSearchValue(value || "");
+  }, [value]);
+  
   useEffect(() => {
     setSearchKey(debouncedSearchValue);
   }, [debouncedSearchValue, setSearchKey]);

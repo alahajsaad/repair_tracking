@@ -19,3 +19,10 @@ export const updateMachine = (machine: Machine): Promise<ApiResponse<Machine>> =
     data: machine,
   });
 };
+
+export const getMachinesByClientId = (id: number): Promise<ApiResponse<Machine[]>> => {
+  return request<Machine[]>({
+    url: `/machine/client/${(id)}`,
+    method: "get",
+  });
+};

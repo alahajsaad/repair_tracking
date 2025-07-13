@@ -1,43 +1,62 @@
 package com.alabenhajsaad.api.business.reparation.specification;
 
-
+import com.alabenhajsaad.api.business.reparation.RepairStatus;
 import com.alabenhajsaad.api.business.reparation.Reparation;
-import jakarta.persistence.criteria.Join;
+import jakarta.persistence.criteria.Expression;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-@Service
+import java.time.LocalDate;
+
 public class ReparationSpecification {
-
-    public static Specification<Reparation> hasClientPhoneNumber(String phoneNumber) {
+    private ReparationSpecification() {}
+    /**
+     * Search reparations by keyword:
+     * Matches machine designation, partner companyName, or combined partner firstName + lastName
+     */
+    public static Specification<Reparation> hasPartnerId(Integer partnerId) {
         return (root, query, criteriaBuilder) -> {
-            if (phoneNumber == null || phoneNumber.trim().isEmpty()) {
-                return criteriaBuilder.conjunction(); // Ne rien ajouter à la requête
+            if (partnerId == null) {
+                return criteriaBuilder.conjunction(); // always true
             }
-            Join<Object, Object> client = root.join("machine").join("client");
-            Join<Object, Object> phoneNumbers = client.join("phoneNbsList");
-            return criteriaBuilder.equal(phoneNumbers.get("number"), phoneNumber);
+            return criteriaBuilder.equal(root.get("machine").get("partner").get("id"), partnerId);
+        };
+    }
+    public static Specification<Reparation> hasMachineId(Integer machineId) {
+        return (root, query, criteriaBuilder) -> {
+            if (machineId == null) {
+                return criteriaBuilder.conjunction(); // always true
+            }
+            return criteriaBuilder.equal(root.get("machine").get("id"), machineId);
         };
     }
 
-    public static Specification<Reparation> hasMachineReference(String reference) {
+    /**
+     * Filter by repair status
+     */
+    public static Specification<Reparation> hasStatus(RepairStatus status) {
         return (root, query, criteriaBuilder) -> {
-            if (reference == null || reference.trim().isEmpty()) {
-                return criteriaBuilder.conjunction();
+            if (status == null || status == RepairStatus.ALL) {
+                return criteriaBuilder.conjunction(); // always true
             }
-            return criteriaBuilder.equal(root.get("machine").get("reference"), reference);
+            return criteriaBuilder.equal(root.get("repairStatus"), status);
         };
     }
 
-
-    /*public static Specification<Reparation> hasStatus(RepairStatus status) {
+    /**
+     * Filter by date range: fromDate and/or toDate
+     */
+    public static Specification<Reparation> hasDate(LocalDate fromDate, LocalDate toDate) {
         return (root, query, criteriaBuilder) -> {
-            if (status == null) {
+            if (fromDate == null && toDate == null) {
                 return criteriaBuilder.conjunction();
+            } else if (fromDate == null) {
+                return criteriaBuilder.lessThanOrEqualTo(root.get("entryDate"), toDate);
+            } else if (toDate == null) {
+                return criteriaBuilder.greaterThanOrEqualTo(root.get("entryDate"), fromDate);
+            } else {
+                return criteriaBuilder.between(root.get("entryDate"), fromDate, toDate);
             }
-          
-            return criteriaBuilder.equal(root.get("status"), status);
         };
-    }*/
+    }
 }
-
