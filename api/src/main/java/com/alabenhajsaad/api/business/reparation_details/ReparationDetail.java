@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class ReparationDetails {
+public class ReparationDetail {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id ;

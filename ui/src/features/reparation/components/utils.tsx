@@ -27,6 +27,13 @@ export const getStatusText = (status: string) => {
     }
 }
 
+export const RepairStatusMap = new Map<string, string>([
+      ["ALL", "Toutes les réparations"],
+      ["IN_PROGRESS", "En cours"],
+      ["COMPLETED", "Effectuée"],
+      ["DELIVERED", "Validée par le client"],
+]);
+
 
 export type DistractedDynamicPartner = {
     id: number;
@@ -36,7 +43,7 @@ export type DistractedDynamicPartner = {
 }
 
 
-const getPartnerName = (partner: DynamicPartner): string => {
+export const getPartnerName = (partner: DynamicPartner): string => {
   if (partner.entityType === 'PERSON') {
     const firstName = partner.firstName ?? '';
     const lastName = partner.lastName ?? '';

@@ -8,6 +8,7 @@ import java.util.List;
 
 public interface ReparationService {
     Reparation addReparation(Reparation reparation) ;
+    Reparation updateReparation(Reparation reparation);
     Reparation getReparationByCallNumber(String callNumber) ;
     Page<Reparation> getReparations( Integer partnerId, Integer machineId, RepairStatus status, LocalDate fromDate, LocalDate toDate, Pageable pageable);
     Reparation getReparationById(Integer id) ;

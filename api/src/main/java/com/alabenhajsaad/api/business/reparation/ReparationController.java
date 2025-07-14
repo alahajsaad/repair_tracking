@@ -2,16 +2,13 @@ package com.alabenhajsaad.api.business.reparation;
 
 import com.alabenhajsaad.api.config.ApiResponse;
 import lombok.RequiredArgsConstructor;
-import org.apache.juli.DateFormatCache;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.sql.Time;
 import java.time.LocalDate;
-import java.util.Date;
 
 @RestController
 @RequiredArgsConstructor
@@ -27,6 +24,12 @@ public class ReparationController {
     public ResponseEntity<ApiResponse<Reparation>> addReparation(@RequestBody Reparation reparation){
         return ResponseEntity.ok(ApiResponse.success(reparationService.addReparation(reparation),"Réparation ajoutée avec succès."));
     }
+
+    @PutMapping()
+    public ResponseEntity<ApiResponse<Reparation>> updateReparation(@RequestBody Reparation reparation){
+        return ResponseEntity.ok(ApiResponse.success(reparationService.updateReparation(reparation),"Réparation mise à jour avec succès."));
+    }
+
     @GetMapping("/byCallNumber")
     public ResponseEntity<ApiResponse<Reparation>> getReparationByCallNumber(String callNumber){
         Reparation reparation = reparationService.getReparationByCallNumber(callNumber) ;

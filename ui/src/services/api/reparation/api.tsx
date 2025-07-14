@@ -12,6 +12,14 @@ export const addReparation = (reparation:ReparationCreationDto): Promise<ApiResp
     });
 }
 
+export const updateReparation = (reparation:Reparation): Promise<ApiResponse<Reparation>> => {
+    return request<Reparation>({
+      url: "/reparation",
+      method: "put",
+      data: reparation,
+    });
+}
+
 
 
 export const getReparations = (params: GetReparationParams): Promise<Page<Reparation>> => {
@@ -19,6 +27,13 @@ export const getReparations = (params: GetReparationParams): Promise<Page<Repara
     url: "/reparation",
     method: "get",
     params,
+  });
+};
+
+export const getReparationById = (id: number): Promise<ApiResponse<Reparation>> => {
+  return request<Reparation>({
+    url: `/reparation/${id}`,
+    method: "get",
   });
 };
 

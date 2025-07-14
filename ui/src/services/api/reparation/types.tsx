@@ -1,4 +1,5 @@
 import { Machine } from "../machine/types"
+import { ReparationDetail } from "../reparation_details/types"
 
 export type ReparationCreationDto = {
     callNumber:string
@@ -9,11 +10,7 @@ export type ReparationCreationDto = {
 }
 
 export type RepairStatus ="ALL" | "IN_PROGRESS" | "COMPLETED" | "DELIVERED"
-export type ReparationDetails = {
-    id:number
-    description:string
-    price:number
-}
+
 export type Reparation = {
     id:number
     callNumber:string
@@ -21,7 +18,7 @@ export type Reparation = {
     entryDate:string
     releaseDate:string
     repairStatus:RepairStatus
-    detailsList:ReparationDetails[]
+    detailsList:ReparationDetail[]
     machine:Machine
 
 }

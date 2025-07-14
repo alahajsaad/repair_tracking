@@ -17,21 +17,21 @@ public class ReparationDetailsServiceImpl implements ReparationDetailsService {
     private final ReparationService reparationService;
 
     @Override
-    public ReparationDetails addDetails(ReparationDetails details, int reparationId) {
+    public ReparationDetail addDetail(ReparationDetail detail, int reparationId) {
         Reparation reparation = reparationService.getReparationById(reparationId);
-        details.setReparation(reparation);
-        return repository.save(details);
+        detail.setReparation(reparation);
+        return repository.save(detail);
     }
 
     @Override
-    public List<ReparationDetails> getDetailsByReparationId(int reparationId) {
+    public List<ReparationDetail> getDetailsByReparationId(int reparationId) {
         return repository.findByReparationId(reparationId);
     }
 
     @Override
     @Transactional
-    public ReparationDetails updateDetails(ReparationDetails details) {
-        ReparationDetails existingDetail = repository.findById(details.getId())
+    public ReparationDetail updateDetails(ReparationDetail details) {
+        ReparationDetail existingDetail = repository.findById(details.getId())
                 .orElseThrow(() -> new EntityNotFoundException("Details with ID " + details.getId() + " cannot be found"));
 
         existingDetail.setDescription(details.getDescription());

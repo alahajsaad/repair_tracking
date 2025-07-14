@@ -4,6 +4,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface ReparationDetailsRepository extends JpaRepository<ReparationDetails, Integer> {
-    List<ReparationDetails> findByReparationId(int reparationId);
+public interface ReparationDetailsRepository extends JpaRepository<ReparationDetail, Integer> {
+    List<ReparationDetail> findByReparationId(int reparationId);
 }

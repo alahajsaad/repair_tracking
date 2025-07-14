@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -25,6 +26,25 @@ public class ReparationServiceImpl implements ReparationService {
         reparation.setEntryDate(LocalDate.now());
         reparation.setRepairStatus(RepairStatus.IN_PROGRESS);
         return repository.save(reparation) ;
+    }
+
+    @Override
+    public Reparation updateReparation(Reparation reparation) {
+        var oldReparation = repository.findById(reparation.getId())
+                .orElseThrow(EntityNotFoundException::new);
+
+        if (oldReparation.getRepairStatus() != reparation.getRepairStatus()) {
+            oldReparation.setRepairStatus(reparation.getRepairStatus());
+            if (reparation.getRepairStatus() == RepairStatus.DELIVERED) {
+                oldReparation.setReleaseDate(LocalDate.now());
+            }
+        }
+
+        if (!Objects.equals(oldReparation.getCustomerComplaint(), reparation.getCustomerComplaint())) {
+            oldReparation.setCustomerComplaint(reparation.getCustomerComplaint());
+        }
+
+        return repository.save(oldReparation);
     }
 
 

@@ -7,18 +7,14 @@ import { useEffect, useState } from "react";
 import { DynamicPartner } from "@/services/api/partner/types";
 import SelectMachine from "@/features/machine/components/SelectMachine";
 import { useReparationFilters } from "../hooks/useReparationFilters";
+import { RepairStatusMap } from "./utils";
 
 
 
 const ReparationsFilter: React.FC = () => {
     const [partner,setPartner] = useState<DynamicPartner>()
     const {fromDate, toDate,  repairStatus ,setPartnerId,setMachineId,setFromDate,setToDate,setRepairStatus,reset} = useReparationFilters()
-    const optionsMap = new Map<string, string>([
-      ["ALL", "Toutes les réparations"],
-      ["IN_PROGRESS", "En cours"],
-      ["COMPLETED", "Effectuée"],
-      ["DELIVERED", "Validée par le client"],
-    ]);
+    
 
     useEffect(() => {
         if(partner?.id){
@@ -65,7 +61,7 @@ const ReparationsFilter: React.FC = () => {
               État de la réparation
             </label>
             <Select
-              mapOptions={optionsMap}
+              mapOptions={RepairStatusMap}
               setOption={setRepairStatus}
               selectedOption={repairStatus}
               className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 focus:border-transparent dark:bg-gray-700"

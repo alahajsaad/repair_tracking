@@ -3,9 +3,9 @@ package com.alabenhajsaad.api.business.reparation_details;
 import java.util.List;
 
 public interface ReparationDetailsService {
-    ReparationDetails addDetails(ReparationDetails details , int reparationId);
-    List<ReparationDetails> getDetailsByReparationId(int reparationId);
-    ReparationDetails updateDetails(ReparationDetails details);
+    ReparationDetail addDetail(ReparationDetail detail , int reparationId);
+    List<ReparationDetail> getDetailsByReparationId(int reparationId);
+    ReparationDetail updateDetails(ReparationDetail details);
     void deleteDetails(int id) ;
 
 }
