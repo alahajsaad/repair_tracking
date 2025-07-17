@@ -75,4 +75,5 @@ public abstract class Partner extends Auditable {
         }
     }
 
+
 }

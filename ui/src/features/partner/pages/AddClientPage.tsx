@@ -79,14 +79,16 @@ const AddClientPage = () => {
     let querry : Person | Organization;
     
     if (data.entityType === "PERSON") {
+        const personInfo = data.basicInfo as { firstName: string; lastName: string };
+
       querry  = {
         partnerType: "CLIENT",
         entityType:"PERSON",
         email: data.email,
         phoneNumbers: data.phoneNumbers,
         addresses: data.addresses,
-        firstName: data.basicInfo.firstName,
-        lastName: data.basicInfo.lastName
+        firstName: personInfo.firstName,
+        lastName: personInfo.lastName
       };
 
       addPerson(querry as Person,{
@@ -101,15 +103,20 @@ const AddClientPage = () => {
 
       )
     } else {
+      const companyInfo = data.basicInfo as {
+        companyName: string;
+        registrationNumber?: string;
+        taxNumber?: string;
+      };
       querry = {
         partnerType: "CLIENT",
         entityType:"ORGANIZATION",
         email: data.email,
         phoneNumbers: data.phoneNumbers,
         addresses: data.addresses,
-        companyName: data.basicInfo.companyName,
-        registrationNumber: data.basicInfo.registrationNumber,
-        taxNumber: data.basicInfo.taxNumber
+        companyName: companyInfo.companyName,
+        registrationNumber: companyInfo.registrationNumber,
+        taxNumber: companyInfo.taxNumber
       };
 
       addOrganization(querry as Organization,{

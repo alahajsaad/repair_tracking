@@ -18,7 +18,7 @@ const SelectMachine: React.FC<SelectMachineProps> = ({ partner, onSelect }) => {
     onSelect(parseInt(value, 10));
   };
 
-  const isDisabled = !machines || machines.data.length === 0;
+const isDisabled = !machines?.data || machines.data.length === 0;
 
   return (
     <>
@@ -30,11 +30,12 @@ const SelectMachine: React.FC<SelectMachineProps> = ({ partner, onSelect }) => {
       <SelectContent>
         <SelectGroup>
           <SelectLabel>Machines disponibles</SelectLabel>
-          {machines?.data.map((machine) => (
+          {(machines?.data ?? []).map((machine) => (
             <SelectItem key={machine.id} value={machine.id.toString()}>
               {machine.designation + " | " + machine.reference}
             </SelectItem>
           ))}
+
         </SelectGroup>
       </SelectContent>
     </Select>

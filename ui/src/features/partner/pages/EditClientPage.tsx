@@ -90,15 +90,17 @@ const EditClientPage: React.FC = () => {
   }));
 
   if (data.entityType === "PERSON") {
+      const personInfo = data.basicInfo as { firstName: string; lastName: string };
+
     const updatedPerson: Person = {
       ...partner,
       entityType: "PERSON",
       email: data.email,
       phoneNumbers: mappedPhoneNumbers, // ✅ Properly mapped
       addresses: mappedAddresses,       // ✅ Properly mapped
-      firstName: data.basicInfo.firstName,
-      lastName: data.basicInfo.lastName
-    };
+      firstName: personInfo.firstName,
+      lastName: personInfo.lastName
+    } as Person;
     
     console.log("updated person:", updatedPerson);
     updatePerson(updatedPerson, {
@@ -112,16 +114,21 @@ const EditClientPage: React.FC = () => {
       }
     });
   } else {
+    const companyInfo = data.basicInfo as {
+    companyName: string;
+    registrationNumber?: string;
+    taxNumber?: string;
+  };
     const updatedOrganization: Organization = {
       ...partner,
       entityType: "ORGANIZATION",
       email: data.email,
       phoneNumbers: mappedPhoneNumbers, // ✅ Properly mapped
       addresses: mappedAddresses,       // ✅ Properly mapped
-      companyName: data.basicInfo.companyName,
-      registrationNumber: data.basicInfo.registrationNumber,
-      taxNumber: data.basicInfo.taxNumber
-    };
+      companyName: companyInfo.companyName,
+      registrationNumber: companyInfo.registrationNumber,
+      taxNumber: companyInfo.taxNumber
+    }  as Organization ;
   
     console.log("updated organization:", updatedOrganization);
     updateOrganization(updatedOrganization, {

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import SidebarItem from "./SidebarItem";
-import { ChevronLeft, ChevronRight, Package, Wrench } from "lucide-react";
+import { ChevronLeft, ChevronRight, Wrench } from "lucide-react";
 import {  SidebarItemData, SidebarParentItemData, useSidebarData } from "./SideBarData";
 import { useIsMobile } from "src/hooks/useMobile";
 import SideBarParentItem from "./SideBarParentItem";

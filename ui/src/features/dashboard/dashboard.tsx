@@ -1,6 +1,6 @@
 import { Separator } from "@radix-ui/react-select";
-import ShouldBeDeliveredReparations from "../reparation/components/shouldBeDeliveredReparations";
 import Statistics from "./components.tsx/statistics";
+import ShouldBeDeliveredReparations from "../reparation/components/ShouldBeDeliveredReparations";
 
 const Dashboard : React.FC = () => {
     return (

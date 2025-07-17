@@ -2,7 +2,6 @@ import { Button } from "@/components/ui";
 import { useGetPartnerById } from "@/services/api/partner/hooks";
 import { User, Building2, Mail, Phone, MapPin, Calendar, Hash, FileText } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
-import AddClientPage from "./AddClientPage";
 
 
 const PartnerDetails: React.FC = () => {

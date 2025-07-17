@@ -14,7 +14,7 @@ type SearchInputProps = {
   
 };
 
-const SearchInput: React.FC<SearchInputProps> = ({ setSearchKey, isPending , label , onfocus , value , placeholder , ref}) => {
+const SearchInput: React.FC<SearchInputProps> = ({ setSearchKey, isPending , label , onfocus , value , placeholder }) => {
   const [searchValue, setSearchValue] = useState<string>("");
   const debouncedSearchValue = useDebounce(searchValue, 300);
 

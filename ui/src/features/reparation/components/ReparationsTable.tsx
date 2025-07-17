@@ -13,7 +13,7 @@ type TransformedData = {
     callNumber:string
     partner:string
     machine:string
-    repairStatus:JSX.Element
+    repairStatus:React.ReactNode
     entryDate:string
     releaseDate:string
     

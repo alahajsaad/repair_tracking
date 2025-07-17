@@ -11,8 +11,9 @@ export function useReparationFilters() {
     
    
     // Extract and convert parameters
-    const fromDate = searchParams.get('fromDate') ? searchParams.get('fromDate') : null ;
-    const toDate = searchParams.get('toDate')  ? searchParams.get('toDate') : null ;
+   const fromDate = searchParams.get('fromDate') ?? undefined;
+const toDate = searchParams.get('toDate') ?? undefined;
+
     const repairStatus = searchParams.get('repairStatus') as GetReparationParams['repairStatus'];
     const partnerId = searchParams.get('partnerId') ? parseInt(searchParams.get('partnerId') as string) : undefined;
     const machineId = searchParams.get('machineId') ? parseInt(searchParams.get('machineId') as string) : undefined;

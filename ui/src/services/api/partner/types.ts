@@ -3,8 +3,8 @@ export type PartnerType ='CLIENT' |'SUPPLIER'
 export type EntityType = "PERSON" | "ORGANIZATION"
 export type Address = {
     id?:number
-    city:string
-    streetAddress: string
+    city?:string
+    streetAddress?: string
 }
 export type PhoneNumber = {
     id?:number
@@ -17,15 +17,15 @@ export type Partner = {
     id?:number
     partnerType:PartnerType
     entityType? : EntityType
-    email:string
+    email?:string
     phoneNumbers:PhoneNumber[]
     addresses:Address[]
 }
 
 export type Organization = Partner & {
     companyName: string
-    registrationNumber: string 
-    taxNumber: string 
+    registrationNumber?: string 
+    taxNumber?: string 
 
 };
 

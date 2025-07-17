@@ -3,7 +3,7 @@ import { Calendar as CalendarComponent } from "@/components/ui/shadcn/calendar";
 import { useState } from "react";
 
 type ReparationFilterDatesProps = {
-  fromDate?: string;
+  fromDate?: string ;
   toDate?: string;
   setFromDate: (date: string | undefined) => void;
   setToDate: (date: string | undefined) => void;

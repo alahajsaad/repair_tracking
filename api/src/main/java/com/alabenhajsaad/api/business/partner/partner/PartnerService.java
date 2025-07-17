@@ -8,4 +8,5 @@ public interface PartnerService {
     Page<Partner> getPartners(Pageable pageable , String keyword , PartnerType type);
     Partner getPartnerById(Long id);
     Long getPartnerCount();
+    String getPartnerDisplayName(Partner partner);
 }

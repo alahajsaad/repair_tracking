@@ -29,7 +29,7 @@ const SEARCH_PLACEHOLDERS: Record<PartnerType, string> = {
 const ConsultPartnersPage: React.FC = () => {
   // State
   const [page, setPage] = useState(INITIAL_PAGE);
-  const [size, setSize] = useState(DEFAULT_PAGE_SIZE);
+  const [size] = useState(DEFAULT_PAGE_SIZE);
   const [searchKey, setSearchKey] = useState<string>("");
 
   // Hooks

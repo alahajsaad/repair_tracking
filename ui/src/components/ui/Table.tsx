@@ -9,7 +9,7 @@ type VariantType =
   | "WithSelect";
 
 // Allow any value type for display in table cells
-type CellValue = string | number | JSX.Element;
+type CellValue = string | number | React.ReactNode;
 
 // Generic type for table data
 type TableProps<T extends { id: number; [key: string]: CellValue }> = {
