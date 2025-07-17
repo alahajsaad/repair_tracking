@@ -7,7 +7,7 @@ spring:
 
     jpa:
       hibernate:
-        ddl-auto: validate  # Never use 'update' or 'create' on production, better 'validate'!
+        ddl-auto: update  # Never use 'update' or 'create' on production, better 'validate'!
       show-sql: false
 
 server:
