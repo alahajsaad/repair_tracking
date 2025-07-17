@@ -28,7 +28,7 @@ const TableNav = <T,>({ data, page, setPage }: TableNavProps<T>) => {
               ? "bg-gray-200 text-gray-500 cursor-not-allowed dark:bg-gray-600 dark:text-gray-400"
               : "bg-white text-indigo-600 hover:bg-indigo-50 border border-indigo-200 dark:bg-gray-700 dark:text-indigo-300 dark:hover:bg-gray-600"
           }`}
-          onClick={() => setPage(prev => prev - 1)}
+          onClick={() => setPage(page - 1)} 
           disabled={page === 0}
         >
           <ChevronLeft size={16} />
@@ -42,7 +42,7 @@ const TableNav = <T,>({ data, page, setPage }: TableNavProps<T>) => {
               ? "bg-gray-200 text-gray-500 cursor-not-allowed dark:bg-gray-600 dark:text-gray-400"
               : "bg-white text-indigo-600 hover:bg-indigo-50 border border-indigo-200 dark:bg-gray-700 dark:text-indigo-300 dark:hover:bg-gray-600"
           }`}
-          onClick={() => setPage(prev => prev + 1)}
+          onClick={() => setPage(page + 1)} 
           disabled={data && page >= data.totalPages - 1}
         >
           Suivant

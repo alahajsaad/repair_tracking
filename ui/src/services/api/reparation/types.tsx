@@ -9,7 +9,7 @@ export type ReparationCreationDto = {
     }
 }
 
-export type RepairStatus ="ALL" | "IN_PROGRESS" | "COMPLETED" | "DELIVERED"
+export type RepairStatus ="ALL" | "IN_PROGRESS" | "COMPLETED" 
 
 export type Reparation = {
     id:number

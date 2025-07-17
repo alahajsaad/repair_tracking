@@ -1,6 +1,7 @@
 export const Paths = {
     root: "/",
     dashboard:"dashboard",
+    company:"company",
     clients:"clients",
     client:":id" ,
     addClient:"client/add",

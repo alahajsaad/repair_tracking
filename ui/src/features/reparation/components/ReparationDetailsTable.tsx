@@ -6,6 +6,7 @@ import { ReparationDetail } from "@/services/api/reparation_details/types";
 import { useState } from "react";
 import ReparationDetailForm from "../forms/ReparationDetailForm";
 import { Button } from "@/components/ui";
+import { toast } from "react-toastify";
 type ReparationDetailsTableTypes = {
     reparation: Reparation | undefined;
 };
@@ -13,7 +14,7 @@ const ReparationDetailsTable : React.FC<ReparationDetailsTableTypes> = ({reparat
     const [isUpdating,setIsUpdating]=useState<boolean>(false)
     const [reparationDetail,setReparationDetail] =useState<ReparationDetail>()
     const [isAdding,setIsAdding]=useState<boolean>(false)
-
+    const [reparationDetails,setReparationDetails] = useState<ReparationDetail[]>(reparation?.detailsList || [])
     const {mutate:deleteReparationDetail} = useDeleteReparationDetail()
     
     const head = ["Description","Prix"]
@@ -21,15 +22,29 @@ const ReparationDetailsTable : React.FC<ReparationDetailsTableTypes> = ({reparat
         setReparationDetail(detail)
         setIsUpdating(true)
     }
-    const onDelete = (id:number) => {
-        deleteReparationDetail(id)
-    }
-    
-    const onUpdateSuccess = () => {
+    const onDelete = (id: number) => {
+        setReparationDetails((prev) => prev.filter((detail) => detail.id !== id));
+        deleteReparationDetail(id,{
+            onSuccess: (response) => {
+            
+                toast.success(response.message);
+            },
+            onError: (response) => {
+                toast.error(response.message);
+                
+            }
+        }
+        );
+    };
+
+    const onUpdateSuccess = (detail: ReparationDetail) => {
+        setReparationDetails((prev) => prev.map((d) => (d.id === detail.id ? detail : d)));
         setIsUpdating(false);
         setReparationDetail(undefined);
     };
-    const onAddSuccess = () => {
+
+    const onAddSuccess = (detail:ReparationDetail) => {
+        setReparationDetails((prev) => [...prev, detail]); 
         setIsAdding(false);
         setReparationDetail(undefined);
     };
@@ -49,10 +64,13 @@ const ReparationDetailsTable : React.FC<ReparationDetailsTableTypes> = ({reparat
     }
     return (
         <>
-        <div className="flex justify-end mt-4 mb-2">
+        <div className="flex items-center justify-between mb-2">
+            <p className="text-2xl font-semibold text-gray-800">Détails de la réparation</p>
             <Button onClick={() => setIsAdding(true)}>Ajouter</Button>
         </div>
-        <Table head={head} data={reparation.detailsList} variant={"WithActions"} onEdit={onEdit} onDelete={onDelete} />
+
+        <Table head={head} data={reparationDetails} variant={"WithActions"} onEdit={onEdit} onDelete={onDelete} />
+       
         <Modal
             title="Modifier detail du reparation"
             isOpen={isUpdating}

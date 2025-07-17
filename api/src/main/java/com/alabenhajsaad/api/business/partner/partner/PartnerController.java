@@ -29,4 +29,9 @@ public class PartnerController {
     public ResponseEntity<ApiResponse<Partner>> getPartnerById(@PathVariable Long id) {
         return ResponseEntity.ok(ApiResponse.success(partnerService.getPartnerById(id) , "partner"));
     }
+
+    @GetMapping("/statistics")
+    public ResponseEntity<Long> getPartnerById() {
+        return ResponseEntity.ok(partnerService.getPartnerCount());
+    }
 }

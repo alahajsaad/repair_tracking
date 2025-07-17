@@ -12,8 +12,9 @@ import ConsultReparations from './features/reparation/ConsultReparations';
 import ReparationDetails from './features/reparation/ReparationDetails';
 import MachineForm from './features/machine/MachineForm';
 import ConsultMachines from './features/machine/ConsultMachines';
-import MachineDetails from './features/machine/MachineDetails';
 import { ToastContainer } from 'react-toastify';
+import EditClientPage from './features/partner/pages/EditClientPage';
+import CompanyPage from './features/company/CompanyPage';
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
         <Route index element={<Navigate to={Paths.dashboard} replace />} />
 
         <Route path={Paths.dashboard} element={<Dashboard />} />
+        <Route path={Paths.company} element={<CompanyPage />} />
         
         <Route path={Paths.addReparation} element={<AddReparation />} />
         <Route path={Paths.reparations}>
@@ -34,10 +36,10 @@ function App() {
         <Route path={Paths.addMachine} element={<MachineForm />} />
         <Route path={Paths.machines}>
           <Route index element={<ConsultMachines />} />
-          <Route path={Paths.machine} element={<MachineDetails />} />
         </Route>
 
         <Route path={Paths.addClient} element={<AddClientPage />} />
+        <Route path="/clients/:id/edit" element={<EditClientPage />} />
         <Route path={Paths.clients}>
           <Route index element={<ConsultPartnersPage />} />
           <Route path={Paths.client} element={<PartnerDetails />} />

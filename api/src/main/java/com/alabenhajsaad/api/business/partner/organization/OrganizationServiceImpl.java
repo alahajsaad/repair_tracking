@@ -1,7 +1,8 @@
 package com.alabenhajsaad.api.business.partner.organization;
 
 import com.alabenhajsaad.api.business.partner.PartnerType;
-import com.alabenhajsaad.api.business.partner.PhoneNumber;
+import com.alabenhajsaad.api.business.partner.phone_number.PhoneNumber;
+import com.alabenhajsaad.api.business.partner.phone_number.PhoneNumberService;
 import com.alabenhajsaad.api.business.utils.ErrorMessages;
 import com.alabenhajsaad.api.exception.ConflictException;
 import jakarta.persistence.EntityNotFoundException;
@@ -14,14 +15,16 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class OrganizationServiceImpl implements OrganizationService {
     private final OrganizationRepository organizationRepository;
-
+    private final PhoneNumberService phoneNumberService;
     @Override
     @Transactional
     public Organization createOrganization(Organization organization) {
@@ -56,10 +59,7 @@ public class OrganizationServiceImpl implements OrganizationService {
             existing.setTaxNumber(updatedOrganization.getTaxNumber());
         }
 
-        if (updatedOrganization.getPartnerType() != null &&
-                !updatedOrganization.getPartnerType().equals(existing.getPartnerType())) {
-            existing.setPartnerType(updatedOrganization.getPartnerType());
-        }
+
 
         // Email (optional)
         if (updatedOrganization.getEmail() != null &&
@@ -76,13 +76,39 @@ public class OrganizationServiceImpl implements OrganizationService {
             });
         }
 
-        // Replace phone numbers
+        // Mettre à jour les numéros de téléphone
         if (updatedOrganization.getPhoneNumbers() != null) {
-            existing.getPhoneNumbers().clear();
-            updatedOrganization.getPhoneNumbers().forEach(phone -> {
-                phone.setPartner(existing); // Set FK back-reference
-                existing.getPhoneNumbers().add(phone);
-            });
+            List<PhoneNumber> existingPhones = new ArrayList<>(existing.getPhoneNumbers());
+
+            // Supprimer les numéros absents dans updatedPerson
+            for (PhoneNumber existingPhone : existingPhones) {
+                boolean foundInUpdated = updatedOrganization.getPhoneNumbers().stream()
+                        .anyMatch(updatedPhone -> Objects.equals(updatedPhone.getNumber(), existingPhone.getNumber()));
+
+                if (!foundInUpdated) {
+                    existing.getPhoneNumbers().remove(existingPhone);
+                    phoneNumberService.deletePhoneNumber(existingPhone.getId());
+                }
+            }
+
+            // Ajouter ou mettre à jour
+            for (PhoneNumber updatedPhone : updatedOrganization.getPhoneNumbers()) {
+                Optional<PhoneNumber> optionalExistingPhone = existing.getPhoneNumbers().stream()
+                        .filter(p -> Objects.equals(p.getNumber(), updatedPhone.getNumber()))
+                        .findFirst();
+
+                if (optionalExistingPhone.isPresent()) {
+                   // do nothing
+                } else {
+                    // Nouveau numéro
+                    Optional<PhoneNumber> other = phoneNumberService.findByNumber(updatedPhone.getNumber());
+                    if (other.isPresent()) {
+                        throw new IllegalArgumentException("Phone number already exists: " + updatedPhone.getNumber());
+                    }
+                    updatedPhone.setPartner(existing);
+                    existing.getPhoneNumbers().add(updatedPhone);
+                }
+            }
         }
 
         return organizationRepository.save(existing); // No insert, just update

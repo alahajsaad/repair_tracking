@@ -50,14 +50,12 @@ const AddClientPage = () => {
       form.setValue('basicInfo', {
         firstName: '',
         lastName: '',
-        //entityType: 'PERSON',
       });
     } else {
       form.setValue('basicInfo', {
         companyName: '',
         registrationNumber: '',
         taxNumber: '',
-        //entityType: 'COMPANY',
       });
     }
   };
@@ -91,10 +89,13 @@ const AddClientPage = () => {
         lastName: data.basicInfo.lastName
       };
 
-      addPerson(querry,{
-        onSuccess: () => {
-          toast.success("nouveau client ajouter avec success")
+      addPerson(querry as Person,{
+        onSuccess: (response) => {
+          toast.success(response.message)
           resetForm()
+        },
+        onError:(response) =>{
+          toast.error(response.message)
         }
       }
 
@@ -111,10 +112,13 @@ const AddClientPage = () => {
         taxNumber: data.basicInfo.taxNumber
       };
 
-      addOrganization(querry,{
-        onSuccess: () => {
-          toast.success("nouveau client ajouter avec success")
+      addOrganization(querry as Organization,{
+        onSuccess: (response) => {
+          toast.success(response.message)
           resetForm()
+        },
+        onError:(response)=>{
+          toast.error(response.message)
         }
       })
     }
@@ -161,7 +165,7 @@ const AddClientPage = () => {
                   {/* Email Field */}
                   <div className="space-y-2">
                     <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                      Email <span className="text-red-500">*</span>
+                      Email
                     </label>
                     <input
                       id="email"

@@ -1,6 +1,6 @@
 import { ApiResponse, Page } from "@/types";
 import { DynamicPartner, PartnerType } from "./types";
-import { request } from "@/services/config/request";
+import { rawRequest, request } from "@/services/config/request";
 
 export const getPartners = (params: {
     keyword?: string
@@ -21,3 +21,10 @@ export const getPartnerById = (id: number): Promise<ApiResponse<DynamicPartner>>
     method: "get",
   });
 };
+
+export const getPartnerStatistics = () : Promise<number> =>  {
+  return rawRequest<number>({
+    url: `/partner/statistics`,
+    method: "get",
+  });
+}

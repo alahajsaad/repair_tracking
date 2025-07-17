@@ -2,7 +2,7 @@ package com.alabenhajsaad.api.business.partner.partner;
 
 import com.alabenhajsaad.api.business.partner.Address;
 import com.alabenhajsaad.api.business.partner.PartnerType;
-import com.alabenhajsaad.api.business.partner.PhoneNumber;
+import com.alabenhajsaad.api.business.partner.phone_number.PhoneNumber;
 import com.alabenhajsaad.api.business.partner.organization.Organization;
 import com.alabenhajsaad.api.business.partner.person.Person;
 import com.alabenhajsaad.api.business.utils.Auditable;
@@ -47,7 +47,6 @@ public abstract class Partner extends Auditable {
     @Column(name = "entity_type", insertable = false, updatable = false)
     private String entityType;
 
-    @Column(unique = true)
     @Email(message = "Veuillez saisir une adresse e-mail valide.")
     private String email ;
     @OneToMany(mappedBy = "partner", cascade = CascadeType.ALL, orphanRemoval = true , fetch = FetchType.EAGER)

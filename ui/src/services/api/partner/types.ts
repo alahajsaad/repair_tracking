@@ -8,7 +8,7 @@ export type Address = {
 }
 export type PhoneNumber = {
     id?:number
-    number:number
+    number:string
 }
 
 export type Partner = {

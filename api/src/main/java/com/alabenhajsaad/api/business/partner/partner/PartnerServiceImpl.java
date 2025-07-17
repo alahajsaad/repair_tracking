@@ -23,6 +23,10 @@ public class PartnerServiceImpl implements PartnerService {
                 () -> new ResourceNotFoundException("Partner with id " + id + " not found")
         );
     }
+    @Override
+    public Long getPartnerCount() {
+        return repository.count();
+    }
 
 
 }

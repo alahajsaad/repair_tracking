@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -42,7 +43,6 @@ public class ReparationController {
             @RequestParam(required = false) RepairStatus repairStatus ,
             @RequestParam(required = false) LocalDate fromDate,
             @RequestParam(required = false) LocalDate toDate ,
-
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "8") int size
     ) {
@@ -60,6 +60,20 @@ public class ReparationController {
         reparationService.deleteReparation(id);
         return ResponseEntity.ok(ApiResponse.success("Réparation supprimée avec succès."));
     }
+    @GetMapping("/statistics")
+    public ResponseEntity<Long> getPartnerById() {
+        return ResponseEntity.ok(reparationService.getReparationCount());
+    }
+    @GetMapping("/shouldBeDelivered")
+    public ResponseEntity<List<Reparation>> getShouldBeDeliveredReparations() {
+        return ResponseEntity.ok(reparationService.getShouldBeDeliveredReparations());
+    }
+    @PostMapping("/delivered/{id}")
+    public ResponseEntity<ApiResponse<Void>> setDeliveredReparation(@PathVariable Integer id) {
+        reparationService.deliverReparation(id);
+        return ResponseEntity.ok(ApiResponse.success(null, "Réparation bien livrée."));
+    }
+
 
 
 }

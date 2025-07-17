@@ -23,10 +23,10 @@ export const EntityTypeSelection = ({ value, onChange }: EntityTypeSelectionProp
           </Label>
         </div>
          <div className={`flex items-center space-x-3 p-4 border-2 rounded-lg cursor-pointer transition-all ${
-          value === "COMPANY" ? "border-blue-500 bg-blue-50" : "border-gray-200 hover:border-gray-300"
+          value === "ORGANIZATION" ? "border-blue-500 bg-blue-50" : "border-gray-200 hover:border-gray-300"
         }`}>
-          <RadioGroupItem value="COMPANY" id="company" className="mr-2" />
-          <Label htmlFor="company" className="flex items-center cursor-pointer">
+          <RadioGroupItem value="ORGANIZATION" id="organization" className="mr-2" />
+          <Label htmlFor="organization" className="flex items-center cursor-pointer">
             <Building2 className="mr-2 h-5 w-5" />
             Entreprise
           </Label>

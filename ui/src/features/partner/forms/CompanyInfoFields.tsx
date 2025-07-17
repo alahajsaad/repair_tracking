@@ -37,7 +37,7 @@ const CompanyInfoFields = ({ form }: CompanyInfoFieldsProps) => {
 
       <div>
         <label htmlFor="basicInfo.registrationNumber" className="block text-sm font-medium mb-2">
-          Numéro d'enregistrement <span className="text-destructive">*</span>
+          Numéro d'enregistrement 
         </label>
         <input
           id="basicInfo.registrationNumber"

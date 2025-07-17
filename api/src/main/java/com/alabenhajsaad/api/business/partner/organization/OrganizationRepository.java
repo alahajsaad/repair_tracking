@@ -14,4 +14,5 @@ public interface OrganizationRepository extends JpaRepository<Organization, Long
     Page<Organization> findAll(Specification<Organization> spec, Pageable pageable);
     @Query("SELECT o FROM organization o JOIN o.phoneNumbers pn WHERE pn.number = :number")
     Optional<Organization> findOrganizationByPhoneNumber(@Param("number") String number);
+
 }

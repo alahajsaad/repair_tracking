@@ -9,5 +9,11 @@ spring:
 springdoc:
   override-with-generic-response: false
 
+app:
+  file:
+    upload-dir: F:/repair_tracking_app/uploads
+    company-file: F:/repair_tracking_app/myCompany
+
+
 jwt:
   secret: ${secret_key}

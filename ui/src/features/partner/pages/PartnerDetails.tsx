@@ -1,13 +1,15 @@
+import { Button } from "@/components/ui";
 import { useGetPartnerById } from "@/services/api/partner/hooks";
 import { User, Building2, Mail, Phone, MapPin, Calendar, Hash, FileText } from "lucide-react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import AddClientPage from "./AddClientPage";
 
 
 const PartnerDetails: React.FC = () => {
     const { id } = useParams<{ id: string }>();
     const numericId = id ? parseInt(id, 10) : -1;
     const { data: partner, isPending } = useGetPartnerById(numericId);
- 
+    const navigate = useNavigate() ;
   
 
   if (isPending) {
@@ -23,26 +25,22 @@ const PartnerDetails: React.FC = () => {
       <div className="flex justify-center items-center min-h-64">
         <div className="text-center">
           <div className="text-gray-400 text-6xl mb-4">🔍</div>
-          <h3 className="text-lg font-medium text-gray-900 mb-2">Partner not found</h3>
-          <p className="text-gray-500">The partner you're looking for doesn't exist.</p>
+          <h3 className="text-lg font-medium text-gray-900 mb-2">Partenaire introuvable</h3>
+          <p className="text-gray-500">Le partenaire que vous recherchez n'existe pas.</p>
         </div>
       </div>
     );
   }
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
+    return new Date(dateString).toLocaleDateString('fr-FR', {
       year: 'numeric',
       month: 'long',
       day: 'numeric'
     });
   };
 
-  const getPartnerTypeColor = (type: string) => {
-    return type === 'SUPPLIER' 
-      ? 'bg-green-100 text-green-800' 
-      : 'bg-blue-100 text-blue-800';
-  };
+ 
 
   return (
     <div className="max-w-4xl mx-auto p-6">
@@ -65,12 +63,14 @@ const PartnerDetails: React.FC = () => {
                     : partner.companyName}
                 </h1>
                 <p className="text-gray-600 mt-1">
-                  {partner.entityType === 'PERSON' ? 'Individual' : 'Organization'}
+                  {partner.entityType === 'PERSON' ? 'Particulier' : 'Organisation'}
                 </p>
               </div>
             </div>
-            <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${getPartnerTypeColor(partner.partnerType)}`}>
-              {partner.partnerType}
+            <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium">
+              <Button onClick={() => navigate(`/clients/${partner.id}/edit`)}>
+                Modifier
+              </Button>            
             </span>
           </div>
         </div>
@@ -84,12 +84,12 @@ const PartnerDetails: React.FC = () => {
               <div>
                 <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
                   <Hash className="h-5 w-5 mr-2 text-gray-500" />
-                  Basic Information
+                  Informations de base
                 </h3>
                 <div className="space-y-3">
                   <div className="flex items-center space-x-3">
                     <Mail className="h-4 w-4 text-gray-400" />
-                    <span className="text-gray-600">Email:</span>
+                    <span className="text-gray-600">Email :</span>
                     <span className="text-gray-900 font-medium">{partner.email}</span>
                   </div>
                   
@@ -97,12 +97,12 @@ const PartnerDetails: React.FC = () => {
                     <>
                       <div className="flex items-center space-x-3">
                         <User className="h-4 w-4 text-gray-400" />
-                        <span className="text-gray-600">First Name:</span>
+                        <span className="text-gray-600">Prénom :</span>
                         <span className="text-gray-900 font-medium">{partner.firstName}</span>
                       </div>
                       <div className="flex items-center space-x-3">
                         <User className="h-4 w-4 text-gray-400" />
-                        <span className="text-gray-600">Last Name:</span>
+                        <span className="text-gray-600">Nom :</span>
                         <span className="text-gray-900 font-medium">{partner.lastName}</span>
                       </div>
                     </>
@@ -110,12 +110,12 @@ const PartnerDetails: React.FC = () => {
                     <>
                       <div className="flex items-center space-x-3">
                         <FileText className="h-4 w-4 text-gray-400" />
-                        <span className="text-gray-600">Registration Number:</span>
+                        <span className="text-gray-600">Numéro d'enregistrement :</span>
                         <span className="text-gray-900 font-medium">{partner.registrationNumber}</span>
                       </div>
                       <div className="flex items-center space-x-3">
                         <Hash className="h-4 w-4 text-gray-400" />
-                        <span className="text-gray-600">Tax Number:</span>
+                        <span className="text-gray-600">Numéro fiscal :</span>
                         <span className="text-gray-900 font-medium">{partner.taxNumber}</span>
                       </div>
                     </>
@@ -128,7 +128,7 @@ const PartnerDetails: React.FC = () => {
                 <div>
                   <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
                     <Phone className="h-5 w-5 mr-2 text-gray-500" />
-                    Phone Numbers
+                    Numéros de téléphone
                   </h3>
                   <div className="space-y-2">
                     {partner.phoneNumbers.map((phone, index) => (
@@ -149,7 +149,7 @@ const PartnerDetails: React.FC = () => {
                 <div>
                   <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
                     <MapPin className="h-5 w-5 mr-2 text-gray-500" />
-                    Addresses
+                    Adresses
                   </h3>
                   <div className="space-y-4">
                     {partner.addresses.map((address, index) => (
@@ -171,17 +171,17 @@ const PartnerDetails: React.FC = () => {
               <div>
                 <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
                   <Calendar className="h-5 w-5 mr-2 text-gray-500" />
-                  Timeline
+                  Chronologie
                 </h3>
                 <div className="space-y-3">
                   <div className="flex items-center space-x-3">
                     <Calendar className="h-4 w-4 text-gray-400" />
-                    <span className="text-gray-600">Created:</span>
+                    <span className="text-gray-600">Créé :</span>
                     <span className="text-gray-900 font-medium">{formatDate(partner.createdAt)}</span>
                   </div>
                   <div className="flex items-center space-x-3">
                     <Calendar className="h-4 w-4 text-gray-400" />
-                    <span className="text-gray-600">Updated:</span>
+                    <span className="text-gray-600">Mis à jour :</span>
                     <span className="text-gray-900 font-medium">{formatDate(partner.updatedAt)}</span>
                   </div>
                 </div>

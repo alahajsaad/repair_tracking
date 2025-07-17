@@ -44,5 +44,8 @@ export const useGetPartnerById = (id: number) => {
       }
       return response.data as DynamicPartner;
     }),
+    gcTime: 1000 * 60 * 15, // Keep data in cache until app is closed
+    staleTime: 1000 * 60 * 15, // Consider data fresh for 60 minutes
+    
   });
 };

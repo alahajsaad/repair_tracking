@@ -43,3 +43,25 @@ export const getCallNumber = (): Promise<ApiResponse<string>> => {
       method: "get",
     });
 }
+
+export const getReparationStatistics = () : Promise<number> =>  {
+  return rawRequest<number>({
+    url: `/reparation/statistics`,
+    method: "get",
+  });
+}
+
+export const getShouldBeDeliveredReparations = () : Promise<Reparation[]> =>  {
+  return rawRequest<Reparation[]>({
+    url: `/reparation/shouldBeDelivered`,
+    method: "get",
+  });
+}
+
+export const setDeliveredReparation = (id:number): Promise<ApiResponse<void>> => {
+    return request<void>({
+      url:`/reparation/delivered/${id}`,
+      method: "post",
+    
+    });
+}

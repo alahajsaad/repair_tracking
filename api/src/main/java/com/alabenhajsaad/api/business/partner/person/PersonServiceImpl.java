@@ -1,7 +1,8 @@
 package com.alabenhajsaad.api.business.partner.person;
 
 import com.alabenhajsaad.api.business.partner.PartnerType;
-import com.alabenhajsaad.api.business.partner.PhoneNumber;
+import com.alabenhajsaad.api.business.partner.phone_number.PhoneNumber;
+import com.alabenhajsaad.api.business.partner.phone_number.PhoneNumberService;
 import com.alabenhajsaad.api.business.utils.ErrorMessages;
 import com.alabenhajsaad.api.exception.ConflictException;
 import jakarta.persistence.EntityNotFoundException;
@@ -14,7 +15,9 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -23,6 +26,7 @@ import java.util.Optional;
 public class PersonServiceImpl implements PersonService{
 
     private final PersonRepository personRepository;
+    private final PhoneNumberService phoneNumberService;
 
 
     @Override
@@ -41,9 +45,9 @@ public class PersonServiceImpl implements PersonService{
     @Transactional
     public Person updatePerson(Person updatedPerson) {
         Person existing = personRepository.findById(updatedPerson.getId())
-                .orElseThrow(() -> new EntityNotFoundException("Organization not found"));
+                .orElseThrow(() -> new EntityNotFoundException("Person not found"));
 
-        // Merge scalar fields (only if not null or changed)
+        // Mettre à jour les champs simples
         if (updatedPerson.getFirstName() != null &&
                 !updatedPerson.getFirstName().equals(existing.getFirstName())) {
             existing.setFirstName(updatedPerson.getFirstName());
@@ -54,38 +58,58 @@ public class PersonServiceImpl implements PersonService{
             existing.setLastName(updatedPerson.getLastName());
         }
 
-
-        if (updatedPerson.getPartnerType() != null &&
-                !updatedPerson.getPartnerType().equals(existing.getPartnerType())) {
-            existing.setPartnerType(updatedPerson.getPartnerType());
-        }
-
-        // Email (optional)
         if (updatedPerson.getEmail() != null &&
                 !updatedPerson.getEmail().equals(existing.getEmail())) {
             existing.setEmail(updatedPerson.getEmail());
         }
 
-        // Replace addresses
+        // Remplacer les adresses
         if (updatedPerson.getAddresses() != null) {
             existing.getAddresses().clear();
             updatedPerson.getAddresses().forEach(addr -> {
-                addr.setPartner(existing); // Set FK back-reference
+                addr.setPartner(existing);
                 existing.getAddresses().add(addr);
             });
         }
 
-        // Replace phone numbers
+        // Mettre à jour les numéros de téléphone
         if (updatedPerson.getPhoneNumbers() != null) {
-            existing.getPhoneNumbers().clear();
-            updatedPerson.getPhoneNumbers().forEach(phone -> {
-                phone.setPartner(existing); // Set FK back-reference
-                existing.getPhoneNumbers().add(phone);
-            });
+            List<PhoneNumber> existingPhones = new ArrayList<>(existing.getPhoneNumbers());
+
+            // Supprimer les numéros absents dans updatedPerson
+            for (PhoneNumber existingPhone : existingPhones) {
+                boolean foundInUpdated = updatedPerson.getPhoneNumbers().stream()
+                        .anyMatch(updatedPhone -> Objects.equals(updatedPhone.getNumber(), existingPhone.getNumber()));
+
+                if (!foundInUpdated) {
+                    existing.getPhoneNumbers().remove(existingPhone);
+                    phoneNumberService.deletePhoneNumber(existingPhone.getId());
+                }
+            }
+
+            // Ajouter ou mettre à jour
+            for (PhoneNumber updatedPhone : updatedPerson.getPhoneNumbers()) {
+                Optional<PhoneNumber> optionalExistingPhone = existing.getPhoneNumbers().stream()
+                        .filter(p -> Objects.equals(p.getNumber(), updatedPhone.getNumber()))
+                        .findFirst();
+
+                if (optionalExistingPhone.isPresent()) {
+                     // do nothing
+                } else {
+                    // Nouveau numéro
+                    Optional<PhoneNumber> other = phoneNumberService.findByNumber(updatedPhone.getNumber());
+                    if (other.isPresent()) {
+                        throw new IllegalArgumentException("Phone number already exists: " + updatedPhone.getNumber());
+                    }
+                    updatedPhone.setPartner(existing);
+                    existing.getPhoneNumbers().add(updatedPhone);
+                }
+            }
         }
 
-        return personRepository.save(existing); // No insert, just update
+        return personRepository.save(existing);
     }
+
 
     @Override
     public Person findById(Long id) {

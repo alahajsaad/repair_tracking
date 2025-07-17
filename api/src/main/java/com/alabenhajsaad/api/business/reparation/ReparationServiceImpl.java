@@ -25,6 +25,7 @@ public class ReparationServiceImpl implements ReparationService {
     public Reparation addReparation(Reparation reparation) {
         reparation.setEntryDate(LocalDate.now());
         reparation.setRepairStatus(RepairStatus.IN_PROGRESS);
+        reparation.setShouldBeDelivered(false);
         return repository.save(reparation) ;
     }
 
@@ -35,8 +36,9 @@ public class ReparationServiceImpl implements ReparationService {
 
         if (oldReparation.getRepairStatus() != reparation.getRepairStatus()) {
             oldReparation.setRepairStatus(reparation.getRepairStatus());
-            if (reparation.getRepairStatus() == RepairStatus.DELIVERED) {
+            if (reparation.getRepairStatus() == RepairStatus.COMPLETED) {
                 oldReparation.setReleaseDate(LocalDate.now());
+                oldReparation.setShouldBeDelivered(true);
             }
         }
 
@@ -95,5 +97,21 @@ public class ReparationServiceImpl implements ReparationService {
         return CodeGenerator.generateNewCallNumber(repository.findLastCallNumber());
     }
 
+    @Override
+    public Long getReparationCount() {
+        return repository.count();
+    }
+
+    @Override
+    public List<Reparation> getShouldBeDeliveredReparations() {
+        return repository.findReparationByShouldBeDelivered(true);
+    }
+
+    @Override
+    public void deliverReparation(Integer id) {
+        var reparation = getReparationById(id) ;
+        reparation.setShouldBeDelivered(false);
+        repository.save(reparation);
+    }
 
 }

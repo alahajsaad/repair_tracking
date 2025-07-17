@@ -1,10 +1,12 @@
 import { Badge } from "@/components/ui/shadcn/badge";
 import { Reparation } from "@/services/api/reparation/types";
-import { getPartnerName, getStatusStyle } from "./utils";
-import { Button } from "@/components/ui/shadcn/button";
+import { getPartnerName, getStatusStyle, getStatusText } from "./utils";
 import { useState } from "react";
 import Modal from "@/components/ui/Modal";
 import UpdateReparationForm from "../forms/UpdateReparationForm";
+import { Button } from "@/components/ui";
+import { handleGenerateRepairReportPdf } from "@/lib/GeneratePdf";
+import { useGetCompany, useGetCompanyLogo } from "@/services/api/company/hooks";
 
 type ReparationGeneralInfoProps = {
     reparation: Reparation | undefined;
@@ -15,8 +17,12 @@ const ReparationGeneralInfo: React.FC<ReparationGeneralInfoProps> = ({ reparatio
         if (!date) return "Non définie";
         return new Date(date).toLocaleDateString('fr-FR');
     };
+    const {data:companyDetails} = useGetCompany()
+    const {data:logo} = useGetCompanyLogo(companyDetails?.logoUrl || '')
     const [isUpdating,setIsUpdating] = useState<boolean>(false)
-   
+    const onUpdateSuccess = () => {
+        setIsUpdating(false);
+    };
     // Gestion du cas où reparation est undefined
     if (!reparation) {
         return (
@@ -43,9 +49,13 @@ const ReparationGeneralInfo: React.FC<ReparationGeneralInfoProps> = ({ reparatio
                         Informations générales
                     </p>
                 </div>
-                <Button onClick={() => setIsUpdating(true)} variant="outline" size="sm">
-                    Modifier
-                </Button>
+               
+                   
+                    <Button onClick={() => setIsUpdating(true)} >
+                        Modifier
+                    </Button>
+               
+                
             </div>
 
             {/* Informations principales */}
@@ -73,9 +83,12 @@ const ReparationGeneralInfo: React.FC<ReparationGeneralInfoProps> = ({ reparatio
                         <div className="flex items-center justify-between">
                             <span className="text-sm font-medium text-gray-600">Statut</span>
                             <Badge className={getStatusStyle(reparation.repairStatus)}>
-                                {reparation.repairStatus}
+                                {getStatusText(reparation.repairStatus)}
                             </Badge>
                         </div>
+                        <Button onClick={() => handleGenerateRepairReportPdf(reparation.id)} >
+                            Fiche de réparation                    
+                        </Button>
                     </div>
                 </div>
 
@@ -130,7 +143,7 @@ const ReparationGeneralInfo: React.FC<ReparationGeneralInfoProps> = ({ reparatio
                 onClose={() => setIsUpdating(false)}
                 size="md"
                 >
-                <UpdateReparationForm  initialReparation={reparation} />
+                <UpdateReparationForm onUpdateSuccess={onUpdateSuccess}  initialReparation={reparation} />
             </Modal>
         </div>
     );

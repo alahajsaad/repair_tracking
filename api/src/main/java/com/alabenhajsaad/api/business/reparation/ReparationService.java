@@ -15,5 +15,8 @@ public interface ReparationService {
     List<Reparation> getReparationByMachineId(Integer id) ;
     void deleteReparation(Integer id) ;
     String getCallNumber() ;
+    Long getReparationCount();
+    List<Reparation> getShouldBeDeliveredReparations();
+    void deliverReparation(Integer id);
 
 }

@@ -24,7 +24,7 @@ public class Reparation {
     private String customerComplaint ;
     private LocalDate entryDate ;
     private LocalDate releaseDate ;
-
+    private Boolean shouldBeDelivered;
     @Enumerated(EnumType.STRING)
     private RepairStatus repairStatus ;
 

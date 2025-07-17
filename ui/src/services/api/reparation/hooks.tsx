@@ -1,9 +1,10 @@
 import { ApiResponse, Page } from "@/types";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { GetReparationParams, Reparation, ReparationCreationDto } from "./types";
-import { addReparation, getCallNumber, getReparationById, getReparations, updateReparation } from "./api";
+import { addReparation, getCallNumber, getReparationById, getReparations, getShouldBeDeliveredReparations, setDeliveredReparation, updateReparation } from "./api";
 
 export const useAddReparation = () => {
+   
     return useMutation<ApiResponse<Reparation>, Error, ReparationCreationDto>({
     mutationFn: (machine: ReparationCreationDto) =>
       addReparation(machine).then(response => {
@@ -15,18 +16,25 @@ export const useAddReparation = () => {
   });
 };
 
+// Update reparation
 export const useUpdateReparation = () => {
-    return useMutation<ApiResponse<Reparation>, Error, Reparation>({
-    mutationFn: (machine: Reparation) =>
-      updateReparation(machine).then(response => {
-        if (response.status === 'error') {
-          throw new Error(response.message);
-        }
-        return response as ApiResponse<Reparation>;
-      }),
+  const queryClient = useQueryClient();
+  return useMutation<ApiResponse<Reparation>, Error, Reparation>({
+    mutationFn: async (reparation: Reparation) => {
+      const response = await updateReparation(reparation);
+      if (response.status === 'error') {
+        throw new Error(response.message);
+      }
+      return response;
+    },
+    onSuccess: (data) => {
+      // Invalidate the specific reparation cache by id
+      if (data.data?.id) {
+          queryClient.invalidateQueries({ queryKey: ['reparation', data.data.id] });
+      }
+    },
   });
 };
-
 
 
 export const useGetReparations = (params: GetReparationParams) => {
@@ -39,7 +47,7 @@ export const useGetReparations = (params: GetReparationParams) => {
     },
     gcTime: Infinity,
     staleTime: 1000 * 60 * 15,
-    refetchOnMount: false
+    refetchOnMount: 'always'
   });
 };
 
@@ -68,4 +76,33 @@ export const useGetCallNumber = () => {
       }),
    
   });
+};
+
+export const useGetShouldBeDelivred = () => {
+  return useQuery<Reparation[], Error>({
+    queryKey: ['ShouldBeDelivered'], 
+    queryFn: () => getShouldBeDeliveredReparations().then(response => {
+      return response as Reparation[];
+    }),
+  });
+};
+
+
+
+// Update reparation
+export const useSetShouldBeDelivered = () => {
+  const queryClient = useQueryClient();
+  return useMutation<ApiResponse<void>, Error, number>({
+    mutationFn: async (id: number) => {
+      const response = await setDeliveredReparation(id);
+      if (response.status === 'error') {
+        throw new Error(response.message);
+      }
+      return response;
+    },
+    onSuccess: () => {
+          queryClient.invalidateQueries({ queryKey: ['ShouldBeDelivered'] });
+      }
+    },
+  );
 };

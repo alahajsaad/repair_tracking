@@ -16,7 +16,7 @@ const PhoneNumbersSection = ({ form }: PhoneNumbersSectionProps) => {
   return (
     <div className="mb-6">
       <div className="flex justify-between items-center mb-4">
-        <h3 className="text-lg font-medium">Numéros de téléphone</h3>
+        <h3 className="text-lg font-medium">Numéros de téléphone  <span className="text-destructive">*</span></h3>
         <Button
           type="button"
           onClick={() =>

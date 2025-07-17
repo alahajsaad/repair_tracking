@@ -1,4 +1,4 @@
-package com.alabenhajsaad.api.business.partner;
+package com.alabenhajsaad.api.business.partner.phone_number;
 
 import com.alabenhajsaad.api.business.partner.partner.Partner;
 import com.fasterxml.jackson.annotation.JsonIgnore;

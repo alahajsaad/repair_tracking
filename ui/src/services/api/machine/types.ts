@@ -15,3 +15,9 @@ export type Machine = {
     designation:string
     partner: DynamicPartner
 }
+
+export type GetMachinesParams = {
+    partnerId?:number
+    page?:number
+    size?:number
+}

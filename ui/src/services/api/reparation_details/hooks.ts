@@ -1,7 +1,8 @@
 import { ApiResponse } from "@/types";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { addReparationDetail, deleteReparationDetail, updateReparationDetail } from "./api";
 import { ReparationDetail, ReparationDetailCreationDto } from "./types";
+import { Reparation } from "../reparation/types";
 
 
 

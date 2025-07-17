@@ -6,8 +6,6 @@ export const getStatusStyle = (status: string) => {
       return 'min-w-[70px] bg-yellow-100 text-yellow-800 px-2 py-1 rounded';
     case 'COMPLETED':
       return 'min-w-[70px] bg-green-100 text-green-800 px-2 py-1 rounded';
-    case 'DELIVERED':
-      return 'min-w-[70px] bg-blue-100 text-blue-800 px-2 py-1 rounded';
     default:
       return 'min-w-[70px] bg-gradient-to-r from-gray-400 to-gray-500 text-white px-2 py-1 rounded';
   }
@@ -19,9 +17,7 @@ export const getStatusText = (status: string) => {
       case 'IN_PROGRESS':
         return 'En cours';
       case 'COMPLETED':
-        return 'Effectuée';
-      case 'DELIVERED':
-        return 'Validée par le client';
+        return 'Terminée';
       default:
         return status;
     }
@@ -30,8 +26,7 @@ export const getStatusText = (status: string) => {
 export const RepairStatusMap = new Map<string, string>([
       ["ALL", "Toutes les réparations"],
       ["IN_PROGRESS", "En cours"],
-      ["COMPLETED", "Effectuée"],
-      ["DELIVERED", "Validée par le client"],
+      ["COMPLETED", "Terminée"],
 ]);
 
 

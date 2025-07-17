@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 // Fixed: Use consistent naming - COMPANY instead of ORGANIZATION
-export const entityTypeSchema = z.enum(["PERSON", "COMPANY"]);
+export const entityTypeSchema = z.enum(["PERSON", "ORGANIZATION"]);
 
 // Person specific schema
 export const personBasicInfoSchema = z.object({
@@ -13,7 +13,7 @@ export const personBasicInfoSchema = z.object({
 // Company specific schema - renamed from organizationBasicInfoSchema
 export const companyBasicInfoSchema = z.object({
   companyName: z.string().min(1, "Company name is required"),
-  registrationNumber: z.string().min(1, "Registration number is required"),
+  registrationNumber: z.string().optional(),
   taxNumber: z.string().optional(),
   //entityType: z.literal("COMPANY"),
 });
@@ -27,16 +27,19 @@ export const phoneNumberSchema = z.object({
 
 // Address schema
 export const addressSchema = z.object({
-  streetAddress: z.string().min(1, "Street address is required"),
-  city: z.string().min(1, "City is required")
+  streetAddress: z.string().optional(),
+  city: z.string().optional()
 });
 
 // Base entity schema (shared between person and company)
 export const baseEntitySchema = z.object({
   entityType: entityTypeSchema,
-  email: z.string().email("Invalid email address"),
+  email: z.string()
+    .email('Adresse email invalide')
+    .optional()
+    .or(z.literal('')),
   phoneNumbers: z.array(phoneNumberSchema).min(1, "At least one phone number is required"),
-  addresses: z.array(addressSchema).min(1, "At least one address is required"),
+  addresses: z.array(addressSchema),
 });
 
 // Client form schema with proper union for basicInfo

@@ -16,8 +16,8 @@ type FormValues = z.infer<typeof formSchema>;
 type ReparationDetailFormProps = {
   initialReparationDetail?: ReparationDetail;
   toggleForm?: (isEditing: boolean) => void;
-  onUpdateSuccess?: () => void;
-  onAddSuccess?: () => void;
+  onUpdateSuccess?: (detail:ReparationDetail) => void;
+  onAddSuccess?: (detail:ReparationDetail) => void;
   partnerId?:number
 };
 
@@ -64,7 +64,7 @@ const ReparationDetailForm: React.FC<ReparationDetailFormProps> = ({
         onSuccess: () => {
           reset();
           toggleForm?.(false);
-          onUpdateSuccess?.();
+          onUpdateSuccess?.(updatedReparationDetail);
           toast.success("Réparation modifiée avec succès");
         },
         onError: (error) => {
@@ -86,7 +86,7 @@ const ReparationDetailForm: React.FC<ReparationDetailFormProps> = ({
           reset();
           toast.success(response.message);
           toggleForm?.(false);
-          onAddSuccess?.();
+          onAddSuccess?.(response.data!);
         },
         onError: (response) => {
           toast.error(response.message);

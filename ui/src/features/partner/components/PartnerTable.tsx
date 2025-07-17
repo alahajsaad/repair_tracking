@@ -1,9 +1,9 @@
-import { PartnerResponseDto } from "@/services/api/partner/types";
+import { DynamicPartner } from "@/services/api/partner/types";
 import { getShowPartnerDtos } from "@/services/api/partner/utils";
 import Table from "src/components/ui/Table";
 
 type PartnerTableProps = {
-    partners: PartnerResponseDto[]
+    partners: DynamicPartner[]
 }
 
 const PartnerTable : React.FC<PartnerTableProps> = ({partners}) => {
