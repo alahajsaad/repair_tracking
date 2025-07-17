@@ -7,6 +7,11 @@ import com.alabenhajsaad.api.exception.ConflictException;
 import com.alabenhajsaad.api.exception.DeleteDeniedException;
 import com.alabenhajsaad.api.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,7 +24,7 @@ public class MachineServiceImpl implements MachineService {
 
     @Override
     public Machine addMachine(Machine machine) {
-        if(repository.existsByReference(machine.getReference())){
+        if(Boolean.TRUE.equals(repository.existsByReference(machine.getReference()))){
             throw new ConflictException("Cette machine existe déjà.") ;
         }
         return repository.save(machine);
@@ -41,8 +46,20 @@ public class MachineServiceImpl implements MachineService {
     }
 
     @Override
+    public Page<Machine> getReparations(Integer partnerId, Pageable pageable) {
+        Specification<Machine> spec = Specification
+                .where(MachineSpecification.hasPartnerId(partnerId));
+
+        if (pageable.getSort().isUnsorted()) {
+            pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by(Sort.Direction.DESC, "id"));
+        }
+
+        return repository.findAll(spec, pageable);
+    }
+
+    @Override
     public List<Machine> getMachinesByClientID(int id) {
-        return repository.findMachinesByClientId(id);
+        return repository.findMachinesByPartnerId(id);
     }
 
     public void deleteMachineById(Integer id) {
@@ -52,6 +69,11 @@ public class MachineServiceImpl implements MachineService {
         } else {
             repository.deleteById(id);
         }
+    }
+
+    @Override
+    public Long getMachineCount() {
+        return repository.count();
     }
 
 }

@@ -1,5 +1,7 @@
 package com.alabenhajsaad.api.fileManager;
 
+import jakarta.annotation.PostConstruct;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
@@ -16,9 +18,14 @@ import java.util.UUID;
 
 @Service
 public class FileLoader {
-    private final Path root = Paths.get( "uploads");
+    @Value("${app.file.upload-dir}")
+    private String uploadDir;
 
-
+    private Path root;
+    @PostConstruct
+    public void init() {
+        this.root = Paths.get(uploadDir);
+    }
 
     public String uploadFile(MultipartFile file) {
         if (file == null || file.isEmpty()) {

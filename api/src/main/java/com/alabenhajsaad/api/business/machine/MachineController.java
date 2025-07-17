@@ -1,40 +1,64 @@
 package com.alabenhajsaad.api.business.machine;
 
+import com.alabenhajsaad.api.business.reparation.RepairStatus;
+import com.alabenhajsaad.api.business.reparation.Reparation;
 import com.alabenhajsaad.api.config.ApiResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/machine/")
+@RequestMapping("api/v1/machine")
 public class MachineController {
-    private final MachineService serviceMachine ;
-    @PostMapping("/add")
+    private final MachineService machineService ;
+    @PostMapping()
     public ResponseEntity<ApiResponse<Machine>> addMachine(@RequestBody Machine machine) {
-        Machine addedMachine = serviceMachine.addMachine(machine);
+        Machine addedMachine = machineService.addMachine(machine);
         return ResponseEntity.ok(ApiResponse.success(addedMachine, "Machine ajoutée avec succès."));
     }
-    @PutMapping("/update")
+
+    @PutMapping()
     public ResponseEntity<ApiResponse<Machine>> updateMachine(@RequestBody Machine machine){
-        Machine updatedMachine = serviceMachine.updateMachine(machine) ;
+        Machine updatedMachine = machineService.updateMachine(machine) ;
         return ResponseEntity.ok(ApiResponse.success(updatedMachine, "Machine modifier avec succès."));
     }
-    @GetMapping("/get/{id}")
+
+    @GetMapping("{id}")
     public ResponseEntity<ApiResponse<Machine>> getMachineById(@PathVariable int id){
-        Machine machine =  serviceMachine.getMachineById(id) ;
+        Machine machine =  machineService.getMachineById(id) ;
         return ResponseEntity.ok(ApiResponse.success(machine)) ;
     }
-    @GetMapping("/get/byClientId/{id}")
+
+    @GetMapping("client/{id}")
     public  ResponseEntity<ApiResponse<List<Machine>>> getMachinesByClientId(@PathVariable int id){
-        List<Machine> machines =  serviceMachine.getMachinesByClientID(id) ;
+        List<Machine> machines =  machineService.getMachinesByClientID(id) ;
         return ResponseEntity.ok(ApiResponse.success(machines)) ;
     }
-    @DeleteMapping("/delete/{id}")
+
+    @GetMapping()
+    public Page<Machine> getMachines(
+            @RequestParam(required = false) Integer partnerId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "8") int size
+    ) {
+        Pageable pageable = PageRequest.of(page, size);
+        return machineService.getReparations(partnerId,pageable);
+    }
+
+    @DeleteMapping("{id}")
     public ResponseEntity<ApiResponse<Void>> deleteMachine(@PathVariable Integer id){
-        serviceMachine.deleteMachineById(id);
+        machineService.deleteMachineById(id);
         return ResponseEntity.ok(ApiResponse.success("Machine avec l'ID : "+id+" supprimés avec succès."));
+    }
+    @GetMapping("/statistics")
+    public ResponseEntity<Long> getPartnerById() {
+        return ResponseEntity.ok(machineService.getMachineCount());
     }
 }

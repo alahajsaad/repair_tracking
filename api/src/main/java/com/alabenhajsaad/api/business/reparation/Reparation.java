@@ -1,6 +1,6 @@
 package com.alabenhajsaad.api.business.reparation;
 
-import com.alabenhajsaad.api.business.details.Details;
+import com.alabenhajsaad.api.business.reparation_details.ReparationDetail;
 import com.alabenhajsaad.api.business.machine.Machine;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -24,12 +24,12 @@ public class Reparation {
     private String customerComplaint ;
     private LocalDate entryDate ;
     private LocalDate releaseDate ;
-
+    private Boolean shouldBeDelivered;
     @Enumerated(EnumType.STRING)
-    private RepairState state ;
+    private RepairStatus repairStatus ;
 
     @OneToMany(mappedBy = "reparation", cascade = CascadeType.REMOVE, orphanRemoval = true)
-    private List<Details> detailsList;
+    private List<ReparationDetail> detailsList;
 
     @ManyToOne
     private Machine machine ;

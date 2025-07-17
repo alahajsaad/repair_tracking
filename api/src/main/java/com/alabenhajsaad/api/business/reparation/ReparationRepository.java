@@ -16,6 +16,7 @@ public interface ReparationRepository extends JpaRepository<Reparation,Integer> 
     Reparation findReparationByCallNumber(String callNumber) ;
     Page<Reparation> findAll(Specification<Reparation> spec, Pageable pageable);
     List<Reparation> findReparationByMachineId(Integer machineId);
+    List<Reparation> findReparationByShouldBeDelivered(Boolean shouldBeDelivered);
 
 
 }

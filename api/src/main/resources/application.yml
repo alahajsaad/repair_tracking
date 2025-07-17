@@ -3,11 +3,17 @@ spring:
     pathMatch:
       matching-strategy: ant_path_matcher
   profiles:
-    active: prod
+    active: dev
 
 
 springdoc:
   override-with-generic-response: false
 
+app:
+  file:
+    upload-dir: F:/repair_tracking_app/uploads
+    company-file: F:/repair_tracking_app/myCompany
+
+
 jwt:
-  secret: 1F295B43EF4E71142171566813FC913264B0F95DD20DEB1610320AC5B687ECDB
+  secret: ${secret_key}

@@ -1,6 +1,6 @@
 package com.alabenhajsaad.api.business.machine;
 
-import com.alabenhajsaad.api.business.client.Client;
+import com.alabenhajsaad.api.business.partner.partner.Partner;
 import com.alabenhajsaad.api.business.reparation.Reparation;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
@@ -25,8 +25,8 @@ public class Machine {
     private String designation ;
 
     @ManyToOne
-    @JoinColumn(name = "client_id", nullable = false)
-    private Client client ;
+    @JoinColumn(name = "partner_id", nullable = false)
+    private Partner partner ;
 
     @OneToMany(mappedBy = "machine")
     @JsonIgnore
