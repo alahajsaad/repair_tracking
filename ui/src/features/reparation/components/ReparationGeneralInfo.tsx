@@ -5,7 +5,7 @@ import { useState } from "react";
 import Modal from "@/components/ui/Modal";
 import UpdateReparationForm from "../forms/UpdateReparationForm";
 import { Button } from "@/components/ui";
-import { useGetReparationReport } from "@/services/pdfService";
+import useReparationReportPdf from "../hooks/useReparationReportPdf";
 
 type ReparationGeneralInfoProps = {
     reparation: Reparation | undefined;
@@ -13,8 +13,9 @@ type ReparationGeneralInfoProps = {
 
 const ReparationGeneralInfo: React.FC<ReparationGeneralInfoProps> = ({ reparation }) => {
     const [isUpdating, setIsUpdating] = useState(false);
-    const { data: pdfBlob, isLoading, error } = useGetReparationReport(reparation?.id ?? 0);
-
+    //const { data: pdfBlob, isLoading, error  } = useGetReparationReport(reparation?.id ?? 0);
+    const { isLoading, error ,setSelectedReparation } = useReparationReportPdf(); 
+    
     const formatDate = (date: string | null) => {
         if (!date) return "Non définie";
         return new Date(date).toLocaleDateString('fr-FR');
@@ -24,12 +25,10 @@ const ReparationGeneralInfo: React.FC<ReparationGeneralInfoProps> = ({ reparatio
         setIsUpdating(false);
     };
 
-    const handleViewPdf = () => {
-        if (!pdfBlob) return;
-
-        const blobUrl = window.URL.createObjectURL(pdfBlob);
-        window.open(blobUrl, "_blank", "noopener,noreferrer");
+     const handleClickPdfButton = (reparation: Reparation) => {
+        setSelectedReparation(reparation); 
     };
+   
 
     if (!reparation) {
         return (
@@ -84,8 +83,7 @@ const ReparationGeneralInfo: React.FC<ReparationGeneralInfoProps> = ({ reparatio
                         </div>
 
                         <Button 
-                            onClick={handleViewPdf} 
-                            disabled={isLoading || !pdfBlob}
+                           onClick={() => handleClickPdfButton(reparation)} disabled={isLoading}
                         >
                             {isLoading ? "Génération..." : "Voir fiche de réparation"}
                         </Button>

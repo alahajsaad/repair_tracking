@@ -15,7 +15,7 @@ import { Organization, Person } from '@/services/api/partner/types';
 import { toast } from 'react-toastify';
 import { ArrowLeft } from 'lucide-react';
 import { useEffect } from 'react';
-import { useUpadtePerson } from '@/services/api/partner/person/hooks';
+import { useUpdatePerson } from '@/services/api/partner/person/hooks';
 
 const EditClientPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -26,8 +26,8 @@ const EditClientPage: React.FC = () => {
   const { data: partner, isPending: isLoadingPartner, error } = useGetPartnerById(numericId);
   
   // Hooks de modification
-  const { mutate: updatePerson, isPending: isUpdatingPerson } = useUpadtePerson();
-  const { mutate: updateOrganization, isPending: isUpdatingOrganization } = useUpdateOrganization();
+  const { mutate: updatePerson, isPending: isUpdatingPerson } = useUpdatePerson(partner?.id || 0);
+  const { mutate: updateOrganization, isPending: isUpdatingOrganization } = useUpdateOrganization(partner?.id || 0);
   
   const isUpdating = isUpdatingPerson || isUpdatingOrganization;
 

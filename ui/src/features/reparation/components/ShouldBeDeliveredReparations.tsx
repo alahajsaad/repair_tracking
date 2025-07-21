@@ -1,11 +1,22 @@
 import { useGetShouldBeDelivred, useSetShouldBeDelivered } from "@/services/api/reparation/hooks";
 import { Check, Wrench, Phone, User, Settings } from "lucide-react";
 import { getPartnerName } from "./utils";
+import { useNavigate } from "react-router-dom";
+import { Button } from "@/components/ui";
+import useReparationReportPdf from "../hooks/useReparationReportPdf";
+import { Reparation } from "@/services/api/reparation/types";
 
 const ShouldBeDeliveredReparations: React.FC = () => {
     const { data: reparations, isPending } = useGetShouldBeDelivred();
     const { mutate: setIsDelivered } = useSetShouldBeDelivered();
+  
+    
+    const { isLoading, error ,setSelectedReparation} = useReparationReportPdf(); 
+    const navigate = useNavigate()
 
+    const handleClickPdfButton = (reparation: Reparation) => {
+        setSelectedReparation(reparation); 
+    };
     const handleMarkAsDelivered = (reparationId: number) => {
         setIsDelivered(reparationId);
     };
@@ -72,10 +83,14 @@ const ShouldBeDeliveredReparations: React.FC = () => {
                             {/* Footer avec statut */}
                             <div className="pt-4 border-t border-gray-100">
                                 <div className="flex items-center justify-between">
-                                    <span className="text-xs text-gray-500">
-                                        Prêt pour livraison
-                                    </span>
-                                    <div className="w-2 h-2 bg-green-400 rounded-full"></div>
+                                        <Button onClick={() => navigate(`/reparations/${reparation.id}`)}>
+                                        Details
+                                        </Button>                                    
+                                        <Button onClick={() => handleClickPdfButton(reparation)} disabled={isLoading} >
+                                        {isLoading ? "Génération..." : "Voir fiche de réparation"}
+                                    </Button>
+                                    {error && <p className="text-red-500 text-sm mt-2">Erreur : {error.message}</p>}
+
                                 </div>
                             </div>
                         </div>

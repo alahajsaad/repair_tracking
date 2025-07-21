@@ -231,13 +231,14 @@
             <div class="date-range">
                 <div class="date-item">
                     <span class="info-label">Date d'entrée:</span>
-                    <span class="info-value">[[${entryDate}]]</span>
+                    <span class="info-value">[[${#temporals.format(entryDate, 'dd/MM/yyyy')}]]</span>
                 </div>
                 <div class="date-item">
                     <span class="info-label">Date de sortie:</span>
-                    <span class="info-value">[[${releaseDate}]]</span>
+                    <span class="info-value">[[${#temporals.format(releaseDate, 'dd/MM/yyyy')}]]</span>
                 </div>
             </div>
+
         </div>
     </div>
 

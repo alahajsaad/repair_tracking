@@ -14,6 +14,7 @@ import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
 import java.io.ByteArrayOutputStream;
+import java.time.LocalDate;
 
 @Service
 public class PdfService {
@@ -64,7 +65,7 @@ public class PdfService {
                 .mapToDouble(ReparationDetail::getPrice)
                 .sum());
         context.setVariable("entryDate",reparation.getEntryDate());
-        context.setVariable("releaseDate",reparation.getReleaseDate());
+        context.setVariable("releaseDate", LocalDate.now());
 
 
 

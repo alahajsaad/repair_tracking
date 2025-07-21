@@ -1,24 +1,31 @@
 // src/App.tsx
-import './App.css';
+import { Suspense, lazy } from 'react';
 import { Routes, Route, Navigate } from "react-router-dom";
-import { Paths } from './lib/Paths';
-import AddClientPage from './features/partner/pages/AddClientPage';
-import PartnerDetails from './features/partner/pages/PartnerDetails';
-import ConsultPartnersPage from './features/partner/pages/ConsultPartnersPage';
-import DashboardLayout from './utils/DashBoardLayout';
-import Dashboard from './features/dashboard/dashboard';
-import AddReparation from './features/reparation/AddReparationForm';
-import ConsultReparations from './features/reparation/ConsultReparations';
-import ReparationDetails from './features/reparation/ReparationDetails';
-import MachineForm from './features/machine/MachineForm';
-import ConsultMachines from './features/machine/ConsultMachines';
 import { ToastContainer } from 'react-toastify';
-import EditClientPage from './features/partner/pages/EditClientPage';
-import CompanyPage from './features/company/CompanyPage';
+import { Paths } from './lib/Paths';
+import DashboardLayout from './utils/DashBoardLayout'; // layout is reused, no need to lazy load
+
+const AddClientPage = lazy(() => import('./features/partner/pages/AddClientPage'));
+const PartnerDetails = lazy(() => import('./features/partner/pages/PartnerDetails'));
+const ConsultPartnersPage = lazy(() => import('./features/partner/pages/ConsultPartnersPage'));
+const EditClientPage = lazy(() => import('./features/partner/pages/EditClientPage'));
+
+const Dashboard = lazy(() => import('./features/dashboard/dashboard'));
+
+const AddReparation = lazy(() => import('./features/reparation/AddReparationForm'));
+const ConsultReparations = lazy(() => import('./features/reparation/ConsultReparations'));
+const ReparationDetails = lazy(() => import('./features/reparation/ReparationDetails'));
+
+const MachineForm = lazy(() => import('./features/machine/MachineForm'));
+const ConsultMachines = lazy(() => import('./features/machine/ConsultMachines'));
+
+const CompanyPage = lazy(() => import('./features/company/CompanyPage'));
+
 
 function App() {
   return (
     <>
+    <Suspense fallback={<div>Loading...</div>}>
     <Routes>
       <Route element={<DashboardLayout />}>
         {/* Par défaut, rediriger vers /clients */}
@@ -49,6 +56,7 @@ function App() {
       {/* Fallback pour les routes inconnues */}
       <Route path="*" element={<div>404 - Page Not Found</div>} />
     </Routes>
+    </Suspense>
     <ToastContainer
         position="bottom-right"
         autoClose={3000}

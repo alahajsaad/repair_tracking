@@ -24,7 +24,7 @@ export const useAddOrganization = () => {
     });
   };
 
-export const useUpdateOrganization = () => {
+export const useUpdateOrganization = (id: number) => {
     const queryClient = useQueryClient();
      
     return useMutation<ApiResponse<Organization>, Error, Organization>({
@@ -36,7 +36,10 @@ export const useUpdateOrganization = () => {
           return response as ApiResponse<Organization>;
         }),
       onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ['Organizations'] });
-      }
+        if (id !== 0) {
+            queryClient.invalidateQueries({ queryKey: ['partners', id] });
+        }
+       
+      },
     });
   };

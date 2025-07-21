@@ -3,7 +3,7 @@ import Table from "@/components/ui/Table";
 import { Reparation } from "@/services/api/reparation/types";
 import { useDeleteReparationDetail } from "@/services/api/reparation_details/hooks";
 import { ReparationDetail } from "@/services/api/reparation_details/types";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ReparationDetailForm from "../forms/ReparationDetailForm";
 import { Button } from "@/components/ui";
 import { toast } from "react-toastify";
@@ -16,7 +16,15 @@ const ReparationDetailsTable : React.FC<ReparationDetailsTableTypes> = ({reparat
     const [isAdding,setIsAdding]=useState<boolean>(false)
     const [reparationDetails,setReparationDetails] = useState<ReparationDetail[]>(reparation?.detailsList || [])
     const {mutate:deleteReparationDetail} = useDeleteReparationDetail()
-    
+
+    useEffect(() => {
+        if(reparation){
+            setReparationDetails(reparation?.detailsList)
+        }
+        
+    },[reparation])
+    console.log("1 : " +  reparation?.detailsList)
+    console.log("2 : " +  reparationDetails)
     const head = ["Description","Prix"]
     const onEdit = (detail:ReparationDetail) => {
         setReparationDetail(detail)
