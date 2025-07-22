@@ -1,4 +1,5 @@
 // src/App.tsx
+import './App.css';
 import { Suspense, lazy } from 'react';
 import { Routes, Route, Navigate } from "react-router-dom";
 import { ToastContainer } from 'react-toastify';
