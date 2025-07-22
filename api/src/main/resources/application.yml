@@ -11,8 +11,8 @@ springdoc:
 
 app:
   file:
-    upload-dir: F:/repair_tracking_app/uploads
-    company-file: F:/repair_tracking_app/myCompany
+    upload-dir: c:/SuiviTech/uploads
+    company-file: c:/SuiviTech/myCompany
 
 
 jwt:
