@@ -1,13 +1,14 @@
 import { ApiResponse } from "@/types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Company, CompanyCreationDto } from "./types";
+import { CompanyCreationDto, CompanyResponseDto } from "./types";
 import { createCompany, getCompany, getCompanyLogo, isCompanyExists, updateCompany } from "./api";
 
 export const useCreateCompany = () => {
   const queryClient = useQueryClient();
   
-  return useMutation<ApiResponse<Company>, Error, CompanyCreationDto>({
+  return useMutation<ApiResponse<CompanyResponseDto>, Error, CompanyCreationDto>({
     mutationFn: async (company) => {
+      console.log("company :"+company)
       const response = await createCompany(company);
       if (response.status === "error") {
         throw new Error(response.message);
@@ -33,7 +34,7 @@ export const useCreateCompany = () => {
 export const useUpdateCompany = () => {
   const queryClient = useQueryClient();
   
-  return useMutation<ApiResponse<Company>, Error, CompanyCreationDto>({
+  return useMutation<ApiResponse<CompanyResponseDto>, Error, CompanyCreationDto>({
     mutationFn: async (company) => {
       const response = await updateCompany(company);
       if (response.status === "error") {
@@ -62,13 +63,13 @@ export const useGetCompanyLogo = (logoUrl: string) => {
 };
 
 export const useGetCompany = () => {
-  return useQuery<Company, Error>({
+  return useQuery<CompanyResponseDto, Error>({
     queryKey: ['company'],
     queryFn: () => getCompany().then(response => {
       if (response.status === 'error') {
         throw new Error(response.message);
       }
-      return response.data as Company;
+      return response.data as CompanyResponseDto;
     }),
     gcTime: Infinity,
     staleTime: Infinity,

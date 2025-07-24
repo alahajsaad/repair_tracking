@@ -6,30 +6,35 @@ import { Button, Input } from "src/components/ui";
 import InputFile from "src/components/ui/inputs/InputFile";
 import { toast } from "react-toastify";
 import { useEffect, useState } from "react";
-import { Company, CompanyCreationDto } from "@/services/api/company/types";
+import { CompanyCreationDto, CompanyResponseDto } from "@/services/api/company/types";
 import { useCreateCompany, useUpdateCompany, useGetCompanyLogo } from "@/services/api/company/hooks";
 
 // Schema de validation avec logo optionnel pour la modification
-const createFormSchema = (isEditMode: boolean) => 
+const createFormSchema = () => 
   z.object({
     companyName: z.string().min(1, "Ajouter le nom de votre entreprise"),
     companyAddress: z.string().min(1, "Ajouter le numéro fiscal de votre entreprise"),
     companyEmail: z.string().email("L'email doit être rempli correctement"),
     companyPhoneNumber: z.string().min(8, "Le numéro de téléphone doit contenir au moins 8 caractères"),
-    logo: isEditMode 
-      ? z.any().optional() // Logo optionnel en mode édition
-      : z.any()
-          .refine((file) => file instanceof File && file.size > 0, "Veuillez importer un fichier valide.")
-          .refine(
-            (file) => ["image/jpeg", "image/png", "image/jpg"].includes(file.type),
-            "Le fichier doit être une image JPG ou PNG."
-          ),
+    generalConditions: z.string().min(1, "Les conditions générales sont requises"),
+    logo: z
+      .any()
+      .optional()
+      .refine(
+        (file) => !file || (file instanceof File && file.size > 0),
+        "Veuillez importer un fichier valide."
+      )
+      .refine(
+        (file) =>
+          !file || ["image/jpeg", "image/png", "image/jpg"].includes(file.type),
+        "Le fichier doit être une image JPG ou PNG."
+      ),
   });
 
 type FormValues = z.infer<ReturnType<typeof createFormSchema>>;
 
 type CompanyFormProps = {
-  initialCompany?: Company;
+  initialCompany?: CompanyResponseDto;
   onUpdateSuccess?:() => void
 };
 
@@ -48,18 +53,18 @@ const CompanyForm: React.FC<CompanyFormProps> = ({
   const isLoading = isEditMode ? isUpdateLoading : isAddLoading;
 
   // Schema dynamique basé sur le mode
-  const formSchema = createFormSchema(isEditMode);
+  const formSchema = createFormSchema();
 
   const { register, handleSubmit, control, formState: { errors }, reset, watch } = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: isEditMode && initialCompany ? {
-      companyName: initialCompany.companyName,
-      companyAddress: initialCompany.companyAddress,
-      companyPhoneNumber: initialCompany.companyPhoneNumber,
-      companyEmail: initialCompany.companyEmail,
+      companyName:initialCompany.companyName,
+      companyAddress:initialCompany.companyAddress,
+      companyEmail:initialCompany.companyEmail,
+      companyPhoneNumber:initialCompany.companyPhoneNumber,
+      generalConditions:initialCompany.generalConditions,
     } : undefined,
   });
-
   // Surveiller les changements du logo
   const watchedLogo = watch('logo');
 
@@ -94,10 +99,10 @@ const CompanyForm: React.FC<CompanyFormProps> = ({
         companyAddress: data.companyAddress,
         companyPhoneNumber: data.companyPhoneNumber,
         companyEmail: data.companyEmail,
+        generalConditions:data.generalConditions,
         // Si pas de nouveau logo, ne pas envoyer le champ logo (garder l'existant)
         ...(hasNewLogo && { logo: data.logo }),
       };
-
       updateCompany(updatedCompany, {
         onSuccess: (response) => {
           onUpdateSuccess?.()
@@ -114,9 +119,10 @@ const CompanyForm: React.FC<CompanyFormProps> = ({
         companyAddress: data.companyAddress,
         companyPhoneNumber: data.companyPhoneNumber,
         companyEmail: data.companyEmail,
+        generalConditions:data.generalConditions,
         logo: data.logo,
       };
-
+      console.log(newCompany.generalConditions)
       createCompany(newCompany, {
         onSuccess: (response) => {
           toast.success(response.message);
@@ -155,9 +161,7 @@ const CompanyForm: React.FC<CompanyFormProps> = ({
 
           <div>
             <Input 
-              placeholder="" 
               label="Numero de telephone" 
-             
               {...register('companyPhoneNumber')}
             />
             {errors.companyPhoneNumber && <p className='text-red-500 text-sm mt-1'>{errors.companyPhoneNumber.message}</p>}
@@ -165,14 +169,25 @@ const CompanyForm: React.FC<CompanyFormProps> = ({
 
           <div>
             <Input 
-              placeholder="" 
-
               type="email"
               label="Email" 
               {...register('companyEmail')}
             />
             {errors.companyEmail && <p className='text-red-500 text-sm mt-1'>{errors.companyEmail.message}</p>}
           </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Conditions générales
+            </label>
+            <textarea 
+              {...register('generalConditions')}
+              rows={4}
+              className="w-full border border-gray-300 rounded-md p-2 text-sm focus:ring focus:ring-blue-200"
+              placeholder="Entrez chaque condition separer avec un /"
+            />
+            </div>
+
 
           <div>
             {/* Affichage du logo existant en mode édition */}

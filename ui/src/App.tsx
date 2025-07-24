@@ -35,6 +35,8 @@ function App() {
         <Route path={Paths.dashboard} element={<Dashboard />} />
         <Route path={Paths.company} element={<CompanyPage />} />
         
+       
+        
         <Route path={Paths.addReparation} element={<AddReparation />} />
         <Route path={Paths.reparations}>
           <Route index element={<ConsultReparations />} />

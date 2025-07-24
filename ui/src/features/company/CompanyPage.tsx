@@ -64,9 +64,9 @@ const CompanyPage: React.FC = () => {
 
   // Show company details
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="container mx-auto px-4 py-8 bg-white rounded-lg shadow-md">
       <div className="max-w-4xl mx-auto">
-        <div className="bg-white rounded-lg shadow-md p-6">
+       
           <div className="flex justify-between items-start mb-6">
             <h1 className="text-3xl font-bold text-gray-900">Détails de l'entreprise</h1>
             <button
@@ -77,66 +77,67 @@ const CompanyPage: React.FC = () => {
             </button>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {/* Company Logo */}
-            <div className="flex justify-center md:justify-start">
-              {company?.logoUrl && (
-                <div className="w-48 h-48 bg-gray-100 rounded-lg flex items-center justify-center overflow-hidden">
-                  {isLoadingLogo ? (
-                    <div className="text-gray-500">Chargement du logo...</div>
-                  ) : logoBlob ? (
-                    <img
-                      src={URL.createObjectURL(logoBlob)}
-                      alt="Logo de l'entreprise"
-                      className="w-full h-full object-cover"
-                    />
-                  ) : (
-                    <div className="text-gray-500">Aucun logo disponible</div>
-                  )}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            {/* Left Column - Logo and Company Information */}
+            <div className="space-y-6">
+              {/* Company Logo */}
+              <div className="flex justify-center">
+                {company?.logoUrl && (
+                  <div className="w-48 h-48  rounded-lg flex items-center justify-center overflow-hidden">
+                    {isLoadingLogo ? (
+                      <div className="text-gray-500">Chargement du logo...</div>
+                    ) : logoBlob ? (
+                      <img
+                        src={URL.createObjectURL(logoBlob)}
+                        alt="Logo de l'entreprise"
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <div className="text-gray-500">Aucun logo disponible</div>
+                    )}
+                  </div>
+                )}
+              </div>
+
+              {/* Company Information */}
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Nom de l'entreprise : <span className='font-bold'>{company?.companyName}</span>
+                  </label>
                 </div>
-              )}
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Adresse : <span className='font-bold'>{company?.companyAddress}</span>
+                  </label>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Numéro de téléphone : <span className='font-bold'>{company?.companyPhoneNumber}</span>
+                  </label>
+                 
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Email : <span className='font-bold'>{company?.companyEmail}</span>
+                  </label>
+                </div>
+              </div>
             </div>
 
-            {/* Company Information */}
-            <div className="space-y-6">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Nom de l'entreprise
-                </label>
-                <div className="text-lg text-gray-900 bg-gray-50 p-3 rounded-lg">
-                  {company?.companyName}
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Adresse
-                </label>
-                <div className="text-lg text-gray-900 bg-gray-50 p-3 rounded-lg">
-                  {company?.companyAddress}
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Numéro de téléphone
-                </label>
-                <div className="text-lg text-gray-900 bg-gray-50 p-3 rounded-lg">
-                  {company?.companyPhoneNumber}
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Email
-                </label>
-                <div className="text-lg text-gray-900 bg-gray-50 p-3 rounded-lg">
-                  {company?.companyEmail}
-                </div>
+            {/* Right Column - General Conditions */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Conditions générales
+              </label>
+              <div className="text-lg text-gray-900 border border-gray-200 p-3 rounded-lg h-full min-h-[300px]">
+                {company?.generalConditions}
               </div>
             </div>
           </div>
-        </div>
       </div>
 
       <Modal

@@ -31,11 +31,13 @@ public class ReparationController {
         return ResponseEntity.ok(ApiResponse.success(reparationService.updateReparation(reparation),"Réparation mise à jour avec succès."));
     }
 
-    @GetMapping("/byCallNumber")
-    public ResponseEntity<ApiResponse<Reparation>> getReparationByCallNumber(String callNumber){
-        Reparation reparation = reparationService.getReparationByCallNumber(callNumber) ;
-        return ResponseEntity.ok(ApiResponse.success(reparation,"Réparation récupérée avec succès avec le numéro d'appel :"+callNumber));
+    @GetMapping("/byCallNumber/{callNumber}")
+    public ResponseEntity<ApiResponse<Reparation>> getReparationByCallNumber(@PathVariable String callNumber) {
+        Reparation reparation = reparationService.getReparationByCallNumber(callNumber);
+        String message = "Réparation récupérée avec succès avec le numéro d'appel : " + callNumber;
+        return ResponseEntity.ok(ApiResponse.success(reparation, message));
     }
+
     @GetMapping()
     public Page<Reparation> getReparations(
             @RequestParam(required = false) Integer partnerId,

@@ -34,7 +34,7 @@ const EditClientPage: React.FC = () => {
   const form = useForm<ClientForm>({
     resolver: zodResolver(clientFormSchema),
     defaultValues: {
-      email: "",
+    
       phoneNumbers: [{ number: "" }],
       addresses: [{ streetAddress: "", city: "" }],
       basicInfo: {
@@ -49,25 +49,24 @@ const EditClientPage: React.FC = () => {
     if (partner) {
       form.reset({
         entityType: partner.entityType,
-        email: partner.email || "",
         phoneNumbers: partner.phoneNumbers?.length > 0 
           ? partner.phoneNumbers.map(phone => ({ number: phone.number }))
-          : [{ number: "" }],
+          : [{ number: undefined }],
         addresses: partner.addresses?.length > 0 
           ? partner.addresses.map(addr => ({ 
               streetAddress: addr.streetAddress, 
               city: addr.city 
             }))
-          : [{ streetAddress: "", city: "" }],
+          : [{ streetAddress: undefined, city: undefined }],
         basicInfo: partner.entityType === "PERSON" 
           ? {
-              firstName: (partner as Person).firstName || '',
-              lastName: (partner as Person).lastName || '',
+              firstName: (partner as Person).firstName || undefined,
+              lastName: (partner as Person).lastName || undefined,
             }
           : {
-              companyName: (partner as Organization).companyName || '',
-              registrationNumber: (partner as Organization).registrationNumber || '',
-              taxNumber: (partner as Organization).taxNumber || '',
+              companyName: (partner as Organization).companyName || undefined,
+              registrationNumber: (partner as Organization).registrationNumber || undefined,
+              taxNumber: (partner as Organization).taxNumber || undefined,
             },
       });
     }
@@ -95,7 +94,6 @@ const EditClientPage: React.FC = () => {
     const updatedPerson: Person = {
       ...partner,
       entityType: "PERSON",
-      email: data.email,
       phoneNumbers: mappedPhoneNumbers, // ✅ Properly mapped
       addresses: mappedAddresses,       // ✅ Properly mapped
       firstName: personInfo.firstName,
@@ -122,7 +120,6 @@ const EditClientPage: React.FC = () => {
     const updatedOrganization: Organization = {
       ...partner,
       entityType: "ORGANIZATION",
-      email: data.email,
       phoneNumbers: mappedPhoneNumbers, // ✅ Properly mapped
       addresses: mappedAddresses,       // ✅ Properly mapped
       companyName: companyInfo.companyName,
@@ -274,24 +271,7 @@ const EditClientPage: React.FC = () => {
                       <CompanyInfoFields form={form} />
                     )}
                     
-                    {/* Email Field */}
-                    <div className="space-y-2">
-                      <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                        Email
-                      </label>
-                      <input
-                        id="email"
-                        type="email"
-                        placeholder="exemple@email.com"
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
-                        {...form.register("email")}
-                      />
-                      {form.formState.errors.email && (
-                        <p className="text-sm text-red-500">
-                          {form.formState.errors.email?.message}
-                        </p>
-                      )}
-                    </div>
+                    
                   </div>
                 </CardBody>
               </Card>

@@ -1,174 +1,99 @@
 package com.alabenhajsaad.api.business.company;
 
 import com.alabenhajsaad.api.business.company.dto.CompanyCreationDto;
+import com.alabenhajsaad.api.business.company.dto.CompanyResponseDto;
+import com.alabenhajsaad.api.business.company.mapper.CompanyMapperService;
+import com.alabenhajsaad.api.exception.CompanyAlreadyExistsException;
+import com.alabenhajsaad.api.exception.ResourceNotFoundException;
 import com.alabenhajsaad.api.fileManager.FileLoader;
-import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.List;
+import java.time.LocalDate;
+import java.util.Objects;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class CompanyServiceImpl implements CompanyService {
 
-    @Value("${app.file.company-file}")
-    private String companyFile;
+    private final CompanyRepository repository;
+    private final CompanyMapperService mapperService;
     private final FileLoader fileLoader;
 
-    @PostConstruct
-    public void init() {
-        try {
-            File file = new File(companyFile);
-            if (file.createNewFile()) {
-                log.info("File created: {}", file.getName());
-            } else {
-                log.info("File already exists.");
-            }
-        } catch (IOException e) {
-            log.error("An error occurred while creating the file: {}", e.getMessage(), e);
+    @Override
+    public CompanyResponseDto createCompany(CompanyCreationDto dto) {
+        if (repository.count() > 0) {
+            throw new CompanyAlreadyExistsException("Vous avez déjà créé votre entreprise.");
         }
+
+        var company = mapperService.toCompany(dto);
+
+        if (dto.logo() != null) {
+            company.setLogoUrl(fileLoader.uploadFile(dto.logo()));
+        }
+
+        company.setIsActive(false);
+        return mapperService.toCompanyResponseDto(repository.save(company));
     }
 
     @Override
-    public Company createCompany(CompanyCreationDto dto) {
-        File file = new File(companyFile);
-        if (file.length() != 0) {
-            throw new RuntimeException("A company already exists.");
+    public boolean isActivated() {
+        Optional<Company> companyOpt = repository.findFirstByOrderByIdAsc();
+
+        if (companyOpt.isEmpty()) {
+            return false;
         }
 
-        try (FileWriter writer = new FileWriter(file)) {
-            writer.write("companyName:" + dto.companyName().trim() + "\n");
-            writer.write("companyAddress:" + dto.companyAddress().trim() + "\n");
-            writer.write("companyEmail:" + dto.companyEmail().trim() + "\n");
-            writer.write("companyPhoneNumber:" + dto.companyPhoneNumber().trim() + "\n");
+        Company company = companyOpt.get();
 
-            if (dto.logo() != null && !dto.logo().isEmpty()) {
-                String logoUrl = fileLoader.uploadFile(dto.logo());
-                writer.write("logoUrl:" + logoUrl.trim() + "\n");
-            }
-
-            log.info("Company created successfully: {}", dto.companyName());
-        } catch (IOException e) {
-            log.error("Failed to write company data: {}", e.getMessage(), e);
-            throw new RuntimeException("Failed to write company data", e);
+        if (Boolean.TRUE.equals(company.getIsActive())) {
+            return true;
         }
 
-        return getCompany();
+        LocalDate installationDate = company.getCreatedAt();
+        return !LocalDate.now().isAfter(installationDate.plusDays(30));
     }
 
     @Override
-    public Company getCompany() {
-        try {
-            List<String> lines = Files.readAllLines(Paths.get(companyFile));
+    public CompanyResponseDto getCompany() {
+        Company company = repository.findFirstByOrderByIdAsc()
+                .orElseThrow(() -> new ResourceNotFoundException("Entreprise non trouvée."));
 
-            if (lines.isEmpty()) {
-                log.warn("Company file is empty.");
-                return null;
-            }
-
-            String companyName = null;
-            String companyAddress = null;
-            String companyEmail = null;
-            String companyPhoneNumber = null;
-            String logoUrl = null;
-
-            for (String line : lines) {
-                String[] parts = line.split(":", 2);
-                if (parts.length == 2) {
-                    String key = parts[0].trim();
-                    String value = parts[1].trim();
-                    switch (key) {
-                        case "companyName":
-                            companyName = value;
-                            break;
-                        case "companyAddress":
-                            companyAddress = value;
-                            break;
-                        case "companyEmail":
-                            companyEmail = value;
-                            break;
-                        case "companyPhoneNumber":
-                            companyPhoneNumber = value;
-                            break;
-                        case "logoUrl":
-                            logoUrl = value;
-                            break;
-                        default:
-                            log.warn("Unknown line in file: {}", line);
-                    }
-                }
-            }
-
-            if (companyName == null || companyEmail == null || companyPhoneNumber == null) {
-                throw new RuntimeException("Incomplete company data in file.");
-            }
-
-            Company company = new Company();
-            company.setCompanyName(companyName);
-            company.setCompanyAddress(companyAddress);
-            company.setCompanyEmail(companyEmail);
-            company.setCompanyPhoneNumber(companyPhoneNumber);
-            company.setLogoUrl(logoUrl);
-
-
-            return company;
-
-        } catch (IOException e) {
-            log.error("Failed to read company data: {}", e.getMessage(), e);
-            throw new RuntimeException("Failed to read company data", e);
-        }
+        return mapperService.toCompanyResponseDto(company);
     }
 
     @Override
     public boolean isExistsCompany() {
-        File file = new File(companyFile);
-        return file.exists() && file.length() > 0;
+        return repository.count() > 0;
     }
 
     @Override
-    public Company updateCompany(CompanyCreationDto dto) {
-        try {
-            // Étape 1: lire l'ancien logo si présent
-            String existingLogoUrl = null;
-            List<String> oldLines = Files.readAllLines(Paths.get(companyFile));
-            for (String line : oldLines) {
-                if (line.startsWith("logoUrl:")) {
-                    existingLogoUrl = line.substring("logoUrl:".length()).trim();
-                    break;
-                }
-            }
+    public CompanyResponseDto updateCompany(CompanyCreationDto dto) {
+        Company company = repository.findFirstByOrderByIdAsc()
+                .orElseThrow(() -> new ResourceNotFoundException("Entreprise non trouvée."));
 
-            // Étape 2: écrire les nouvelles données (en écrasant)
-            try (FileWriter writer = new FileWriter(companyFile, false)) {
-                writer.write("companyName:" + dto.companyName().trim() + "\n");
-                writer.write("companyAddress:" + (dto.companyAddress() != null ? dto.companyAddress().trim() : "") + "\n");
-                writer.write("companyEmail:" + dto.companyEmail().trim() + "\n");
-                writer.write("companyPhoneNumber:" + dto.companyPhoneNumber().trim() + "\n");
-
-                if (dto.logo() != null && !dto.logo().isEmpty()) {
-                    String logoUrl = fileLoader.uploadFile(dto.logo());
-                    writer.write("logoUrl:" + logoUrl.trim() + "\n");
-                } else if (existingLogoUrl != null) {
-                    writer.write("logoUrl:" + existingLogoUrl + "\n");
-                }
-
-                log.info("Company updated successfully: {}", dto.companyName());
-                return getCompany();
-            }
-
-        } catch (IOException e) {
-            log.error("Failed to update company data: {}", e.getMessage(), e);
-            throw new RuntimeException("Failed to update company data", e);
+        if (!Objects.equals(company.getCompanyName(), dto.companyName())) {
+            company.setCompanyName(dto.companyName());
         }
-    }
+        if (!Objects.equals(company.getCompanyAddress(), dto.companyAddress())) {
+            company.setCompanyAddress(dto.companyAddress());
+        }
+        if (!Objects.equals(company.getCompanyEmail(), dto.companyEmail())) {
+            company.setCompanyEmail(dto.companyEmail());
+        }
+        if (!Objects.equals(company.getCompanyPhoneNumber(), dto.companyPhoneNumber())) {
+            company.setCompanyPhoneNumber(dto.companyPhoneNumber());
+        }
+        if (!Objects.equals(company.getGeneralConditions(), dto.generalConditions())) {
+            company.setGeneralConditions(dto.generalConditions());
+        }
+        if (dto.logo() != null) {
+            company.setLogoUrl(fileLoader.uploadFile(dto.logo()));
+        }
 
+        return mapperService.toCompanyResponseDto(repository.save(company));
+    }
 }

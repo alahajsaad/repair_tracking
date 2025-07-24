@@ -1,6 +1,7 @@
 package com.alabenhajsaad.api.business.company;
 
 import com.alabenhajsaad.api.business.company.dto.CompanyCreationDto;
+import com.alabenhajsaad.api.business.company.dto.CompanyResponseDto;
 import com.alabenhajsaad.api.config.ApiResponse;
 import com.alabenhajsaad.api.fileManager.FileLoader;
 import lombok.RequiredArgsConstructor;
@@ -17,8 +18,8 @@ public class CompanyController {
     public final FileLoader fileLoader ;
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<ApiResponse<Company>> createCompany(@ModelAttribute CompanyCreationDto dto) {
-        Company company = companyService.createCompany(dto);
+    public ResponseEntity<ApiResponse<CompanyResponseDto>> createCompany(@ModelAttribute CompanyCreationDto dto) {
+        CompanyResponseDto company = companyService.createCompany(dto);
         return ResponseEntity.ok(ApiResponse.success(company, "Entreprise ajoutée avec succès"));
     }
     @GetMapping("/files/{filename:.+}")
@@ -30,8 +31,8 @@ public class CompanyController {
     }
 
     @GetMapping
-    public ResponseEntity<ApiResponse<Company>> getCompany() {
-        Company company = companyService.getCompany();
+    public ResponseEntity<ApiResponse<CompanyResponseDto>> getCompany() {
+        CompanyResponseDto company = companyService.getCompany();
         if (company == null) {
             return ResponseEntity.ok(ApiResponse.success(null, "Aucune entreprise trouvée"));
         }
@@ -39,8 +40,8 @@ public class CompanyController {
     }
 
     @PutMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<ApiResponse<Company>> updateCompany(@ModelAttribute CompanyCreationDto company) {
-        Company updatedCompany = companyService.updateCompany(company);
+    public ResponseEntity<ApiResponse<CompanyResponseDto>> updateCompany(@ModelAttribute CompanyCreationDto company) {
+        CompanyResponseDto updatedCompany = companyService.updateCompany(company);
         return ResponseEntity.ok(ApiResponse.success(updatedCompany, "Entreprise mise à jour avec succès"));
     }
 

@@ -1,7 +1,7 @@
 import { ApiResponse, Page } from "@/types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { GetReparationParams, Reparation, ReparationCreationDto } from "./types";
-import { addReparation, getCallNumber, getReparationById, getReparations, getShouldBeDeliveredReparations, setDeliveredReparation, updateReparation } from "./api";
+import { addReparation, getCallNumber, getReparationByCallNumber, getReparationById, getReparations, getShouldBeDeliveredReparations, setDeliveredReparation, updateReparation } from "./api";
 
 export const useAddReparation = () => {
    
@@ -51,6 +51,21 @@ export const useGetReparations = (params: GetReparationParams) => {
   });
 };
 
+
+export const useGetReparationByCallNumber = (callNumber: string) => {
+  return useQuery<Reparation, Error>({
+    queryKey: ['reparation', callNumber], 
+    queryFn: () => getReparationByCallNumber(callNumber).then(response => {
+      if (response.status === 'error') {
+        throw new Error(response.message);
+      }
+      return response.data as Reparation;
+    }),
+    enabled:false
+
+   
+  });
+};
 
 export const useGetReparationById = (id: number) => {
   return useQuery<Reparation, Error>({

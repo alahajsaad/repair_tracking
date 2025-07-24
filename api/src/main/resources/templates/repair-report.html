@@ -193,6 +193,61 @@
             padding-top: 15px;
             background: white;
         }
+
+        .footer-conditions {
+            margin-top: 10px;
+            text-align: left;
+        }
+
+        .footer-conditions h4 {
+            font-size: 11px;
+            font-weight: bold;
+            margin-bottom: 8px;
+            text-decoration: underline;
+        }
+
+        .footer-conditions ul {
+            list-style-type: disc;
+            margin: 0;
+            padding-left: 20px;
+        }
+
+        .footer-conditions li {
+            margin-bottom: 3px;
+            font-size: 9px;
+            line-height: 1.3;
+        }
+
+        /* Page break styles */
+        .page-break {
+            page-break-before: always;
+        }
+
+        .conditions-page {
+            margin-top: 30px;
+        }
+
+        .conditions-page h2 {
+            font-size: 18px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 20px;
+            text-decoration: underline;
+        }
+
+        .conditions-content {
+            font-size: 12px;
+            line-height: 1.6;
+            text-align: justify;
+        }
+
+        .conditions-content ol {
+            padding-left: 20px;
+        }
+
+        .conditions-content li {
+            margin-bottom: 10px;
+        }
     </style>
 </head>
 
@@ -208,7 +263,7 @@
                 <div>Email: [[${companyEmail}]]</div>
             </div>
         </div>
-        <div class="logo-section">
+        <div class="logo-section" th:if="${logo != null}">
             <img th:src="'data:image/png;base64,' + ${logo}" alt="Logo" />
         </div>
         <div class="clearfix"></div>
@@ -238,7 +293,6 @@
                     <span class="info-value">[[${#temporals.format(releaseDate, 'dd/MM/yyyy')}]]</span>
                 </div>
             </div>
-
         </div>
     </div>
 
@@ -272,8 +326,8 @@
     </div>
 </div>
 
-<!-- Détails de la réparation -->
-<div class="details-section">
+<!-- Détails de la réparation - Only show if details list is not empty -->
+<div th:if="${details != null and !details.isEmpty()}" class="details-section">
     <h3>Détails de la Réparation</h3>
     <table class="details-table">
         <thead>
@@ -291,8 +345,8 @@
     </table>
 </div>
 
-<!-- Total -->
-<div class="total-section">
+<!-- Total - Only show if details list is not empty -->
+<div th:if="${details != null and !details.isEmpty()}" class="total-section">
     <div class="total-text">Total : [[${total}]] TND</div>
 </div>
 
@@ -300,6 +354,25 @@
 <div class="footer">
     <p>Merci de votre confiance</p>
     <p>Pour toute question, contactez-nous au [[${companyPhoneNumber}]] ou [[${companyEmail}]]</p>
+
+    <!-- General conditions in footer (for short conditions) -->
+    <div th:if="${showConditionsInFooter}" class="footer-conditions">
+        <h4>Conditions Générales</h4>
+        <ul>
+            <li th:each="condition : ${conditionsList}" th:text="${condition}"></li>
+        </ul>
+    </div>
 </div>
+
+<!-- Separate page for general conditions (for long conditions) -->
+<div th:if="${showConditionsOnSeparatePage}" class="page-break conditions-page">
+    <h2>Conditions Générales</h2>
+    <div class="conditions-content">
+        <ol>
+            <li th:each="condition : ${conditionsList}" th:text="${condition}"></li>
+        </ol>
+    </div>
+</div>
+
 </body>
 </html>

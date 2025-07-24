@@ -11,7 +11,7 @@ import java.util.Optional;
 
 public interface PersonRepository extends JpaRepository<Person, Long> {
     Page<Person> findAll(Specification<Person> spec, Pageable pageable);
-    Optional<Person> findByEmail(String email);
+
     @Query("SELECT p FROM person p JOIN p.phoneNumbers pn WHERE pn.number = :number")
     Optional<Person> findPersonByPhoneNumber(@Param("number") String number);
 

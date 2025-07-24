@@ -18,7 +18,7 @@ type ReparationDetailFormProps = {
   toggleForm?: (isEditing: boolean) => void;
   onUpdateSuccess?: (detail:ReparationDetail) => void;
   onAddSuccess?: (detail:ReparationDetail) => void;
-  partnerId?:number
+  reparationId?:number
 };
 
 const ReparationDetailForm: React.FC<ReparationDetailFormProps> = ({ 
@@ -26,7 +26,7 @@ const ReparationDetailForm: React.FC<ReparationDetailFormProps> = ({
   initialReparationDetail, 
   onUpdateSuccess, 
   onAddSuccess,
-  partnerId 
+  reparationId 
 }) => {
   // Utiliser les hooks conditionnellement selon le mode (ajout ou modification)
   const { mutate: addReparationDetail, isPending: isAddLoading } = useAddReparationDetail();
@@ -72,13 +72,13 @@ const ReparationDetailForm: React.FC<ReparationDetailFormProps> = ({
           console.error(error);
         }
       });
-    } else if (partnerId) {
+    } else if (reparationId) {
         const newReparationDetail: AddReparationDetailVariables = {
         detail:{
             description: data.description,
             price: data.price
         },
-        id:partnerId! 
+        id:reparationId! 
       };
 
       addReparationDetail(newReparationDetail, {

@@ -1,15 +1,21 @@
 export type CompanyCreationDto = {
-  companyName: string;
-  companyAddress: string;
-  companyPhoneNumber: string;
-  companyEmail: string;
+  id?:number
+  companyName:string;
+  companyAddress:string;
+  companyEmail:string;
+  companyPhoneNumber:string;
+  generalConditions?:string,
   logo?: File;
 };
 
-export type Company = {
-  companyName: string;
-  companyAddress: string;
-  companyPhoneNumber: string;
-  companyEmail: string;
+export type CompanyResponseDto = {
+  id:number
+  companyName:string;
+  companyAddress:string;
+  companyEmail:string;
+  companyPhoneNumber:string;
+  generalConditions:string,
   logoUrl: string;
 };
+
+

@@ -37,10 +37,18 @@ export const getReparationById = (id: number): Promise<ApiResponse<Reparation>> 
   });
 };
 
+export const getReparationByCallNumber = (callNumber: string): Promise<ApiResponse<Reparation>> => {
+  return request<Reparation>({
+    url:`/reparation/byCallNumber/${callNumber}`,
+    method:"get",
+  });
+};
+
 export const getCallNumber = (): Promise<ApiResponse<string>> => {
     return request<string>({
       url: "/reparation/callNumber",
       method: "get",
+     
     });
 }
 

@@ -1,10 +1,12 @@
 package com.alabenhajsaad.api.business.company;
 
 import com.alabenhajsaad.api.business.company.dto.CompanyCreationDto;
+import com.alabenhajsaad.api.business.company.dto.CompanyResponseDto;
 
 public interface CompanyService {
-    Company createCompany(CompanyCreationDto dto);
-    Company getCompany();
+    CompanyResponseDto createCompany(CompanyCreationDto dto);
+    CompanyResponseDto getCompany();
     boolean isExistsCompany();
-    Company updateCompany(CompanyCreationDto dto);
+    CompanyResponseDto updateCompany(CompanyCreationDto dto);
+    boolean isActivated();
 }

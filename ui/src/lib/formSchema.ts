@@ -34,10 +34,6 @@ export const addressSchema = z.object({
 // Base entity schema (shared between person and company)
 export const baseEntitySchema = z.object({
   entityType: entityTypeSchema,
-  email: z.string()
-    .email('Adresse email invalide')
-    .optional()
-    .or(z.literal('')),
   phoneNumbers: z.array(phoneNumberSchema).min(1, "At least one phone number is required"),
   addresses: z.array(addressSchema),
 });

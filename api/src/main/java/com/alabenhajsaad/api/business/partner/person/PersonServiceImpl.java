@@ -31,9 +31,6 @@ public class PersonServiceImpl implements PersonService{
 
     @Override
     public Person createPerson(Person person) {
-        if (personRepository.findByEmail(person.getEmail()).isPresent()) {
-            throw new ConflictException("Une personne avec l'adresse e-mail '" + person.getEmail() + "' existe déjà.");
-        }
         validatePhoneNumbers(person, false);
         handlePersonRelations(person);
 
@@ -58,10 +55,7 @@ public class PersonServiceImpl implements PersonService{
             existing.setLastName(updatedPerson.getLastName());
         }
 
-        if (updatedPerson.getEmail() != null &&
-                !updatedPerson.getEmail().equals(existing.getEmail())) {
-            existing.setEmail(updatedPerson.getEmail());
-        }
+
 
         // Remplacer les adresses
         if (updatedPerson.getAddresses() != null) {

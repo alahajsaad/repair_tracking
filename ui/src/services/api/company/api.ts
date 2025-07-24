@@ -1,5 +1,5 @@
 import { ApiResponse } from "@/types";
-import { Company, CompanyCreationDto } from "./types";
+import { CompanyCreationDto, CompanyResponseDto } from "./types";
 import { request } from "@/services/config/request";
 import { fileRequest } from "@/services/config/fileRequest";
 
@@ -11,16 +11,17 @@ const getFormData = (company: CompanyCreationDto): FormData => {
   formData.append("companyAddress", company.companyAddress);
   formData.append("companyPhoneNumber", company.companyPhoneNumber);
   formData.append("companyEmail", company.companyEmail);
+  formData.append("generalConditions", company.generalConditions || "");
   if (company.logo && company.logo instanceof File) {
     formData.append("logo", company.logo);
   }
   return formData;
 };
 
-export const createCompany = (company: CompanyCreationDto,): Promise<ApiResponse<Company>> => {
+export const createCompany = (company: CompanyCreationDto): Promise<ApiResponse<CompanyResponseDto>> => {
   const formData = getFormData(company);
  
-  return request<Company>({
+  return request<CompanyResponseDto>({
     url: `/company`,
     method: "post",
     headers: {
@@ -30,9 +31,9 @@ export const createCompany = (company: CompanyCreationDto,): Promise<ApiResponse
   });
 };
 
-export const updateCompany = (company: CompanyCreationDto): Promise<ApiResponse<Company>> => {
+export const updateCompany = (company: CompanyCreationDto): Promise<ApiResponse<CompanyResponseDto>> => {
   const formData = getFormData(company);
-  return request<Company>({
+  return request<CompanyResponseDto>({
     url: `/company`,
     method: "put",
     headers: {
@@ -57,8 +58,8 @@ export const isCompanyExists = (): Promise<ApiResponse<boolean>> => {
   });
 };
 
-export const getCompany = (): Promise<ApiResponse<Company>> => {
-  return request<Company>({
+export const getCompany = (): Promise<ApiResponse<CompanyResponseDto>> => {
+  return request<CompanyResponseDto>({
     url: `/company`,
     method: "get",
   });

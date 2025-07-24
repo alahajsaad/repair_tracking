@@ -23,7 +23,6 @@ const AddClientPage = () => {
     resolver: zodResolver(clientFormSchema),
     defaultValues: {
       entityType: "PERSON",
-      email: "",
       phoneNumbers: [
         {
           number: "",
@@ -63,7 +62,6 @@ const AddClientPage = () => {
   const resetForm = () => {
     form.reset({
       entityType: "PERSON",
-      email: "",
       phoneNumbers: [{ number: "" }],
       addresses: [{ streetAddress: "", city: "" }],
       basicInfo: {
@@ -84,7 +82,6 @@ const AddClientPage = () => {
       querry  = {
         partnerType: "CLIENT",
         entityType:"PERSON",
-        email: data.email,
         phoneNumbers: data.phoneNumbers,
         addresses: data.addresses,
         firstName: personInfo.firstName,
@@ -111,7 +108,6 @@ const AddClientPage = () => {
       querry = {
         partnerType: "CLIENT",
         entityType:"ORGANIZATION",
-        email: data.email,
         phoneNumbers: data.phoneNumbers,
         addresses: data.addresses,
         companyName: companyInfo.companyName,
@@ -169,24 +165,7 @@ const AddClientPage = () => {
                     <CompanyInfoFields form={form} />
                   )}
                   
-                  {/* Email Field */}
-                  <div className="space-y-2">
-                    <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                      Email
-                    </label>
-                    <input
-                      id="email"
-                      type="email"
-                      placeholder="exemple@email.com"
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
-                      {...form.register("email")}
-                    />
-                    {form.formState.errors.email && (
-                      <p className="text-sm text-red-500">
-                        {form.formState.errors.email?.message}
-                      </p>
-                    )}
-                  </div>
+                 
                 </div>
               </CardBody>
             </Card>

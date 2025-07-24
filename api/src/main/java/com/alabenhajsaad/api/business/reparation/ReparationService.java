@@ -19,4 +19,5 @@ public interface ReparationService {
     List<Reparation> getShouldBeDeliveredReparations();
     void deliverReparation(Integer id);
 
+
 }

@@ -17,7 +17,6 @@ export type Partner = {
     id?:number
     partnerType:PartnerType
     entityType? : EntityType
-    email?:string
     phoneNumbers:PhoneNumber[]
     addresses:Address[]
 }
@@ -71,7 +70,6 @@ export type ShowPartnerDto = {
     id:number
     partnerName : string
     entityType : EntityType
-    email : string
 }
 
 
@@ -81,7 +79,6 @@ interface BasePartner {
   updatedAt: string;
   id: number;
   partnerType: "SUPPLIER" | "CUSTOMER"; // Add other types as needed
-  email: string;
   phoneNumbers: PhoneNumber[];
   addresses: Address[];
 }

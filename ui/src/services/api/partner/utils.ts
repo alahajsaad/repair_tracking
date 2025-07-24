@@ -17,7 +17,6 @@ export const getShowPartnerDtos = (dynamicPartner: DynamicPartner[]): ShowPartne
   return dynamicPartner.map((partner) => ({
     id: partner.id,
     partnerName: getPartnerName(partner),
-    entityType:partner.entityType, 
-    email: partner.email,
+    entityType:partner.entityType
   }));
 };

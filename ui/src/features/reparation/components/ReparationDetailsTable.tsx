@@ -94,7 +94,7 @@ const ReparationDetailsTable : React.FC<ReparationDetailsTableTypes> = ({reparat
             onClose={() => setIsAdding(false)}
             size="md"
             >
-            <ReparationDetailForm onAddSuccess={onAddSuccess}  partnerId={reparation.machine.partner.id}/>
+            <ReparationDetailForm onAddSuccess={onAddSuccess}  reparationId={reparation.id}/>
         </Modal>
         </>
     );

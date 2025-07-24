@@ -28,9 +28,7 @@ public class OrganizationServiceImpl implements OrganizationService {
     @Override
     @Transactional
     public Organization createOrganization(Organization organization) {
-        if (organizationRepository.findByRegistrationNumber(organization.getRegistrationNumber()).isPresent()) {
-            throw new ConflictException("Une organisation avec le numéro d'enregistrement '" + organization.getRegistrationNumber() + "' existe déjà.");
-        }
+
         validatePhoneNumbers(organization,false);
         handleOrganizationRelations(organization);
 
@@ -61,11 +59,7 @@ public class OrganizationServiceImpl implements OrganizationService {
 
 
 
-        // Email (optional)
-        if (updatedOrganization.getEmail() != null &&
-                !updatedOrganization.getEmail().equals(existing.getEmail())) {
-            existing.setEmail(updatedOrganization.getEmail());
-        }
+
 
         // Replace addresses
         if (updatedOrganization.getAddresses() != null) {

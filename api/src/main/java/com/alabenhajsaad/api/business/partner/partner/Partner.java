@@ -47,8 +47,6 @@ public abstract class Partner extends Auditable {
     @Column(name = "entity_type", insertable = false, updatable = false)
     private String entityType;
 
-    @Email(message = "Veuillez saisir une adresse e-mail valide.")
-    private String email ;
     @OneToMany(mappedBy = "partner", cascade = CascadeType.ALL, orphanRemoval = true , fetch = FetchType.EAGER)
     private List<PhoneNumber> phoneNumbers ;
 
