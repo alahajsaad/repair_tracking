@@ -47,10 +47,10 @@ public class GlobalExceptionHandler {
     }
 
 
-//    @ExceptionHandler(RuntimeException.class)
-//    public ResponseEntity<ApiResponse<Void>> handleAllRuntimeException(RuntimeException e) {
-//        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ApiResponse.error(e.getMessage()));
-//    }
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<ApiResponse<Void>> handleAllRuntimeException(RuntimeException e) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ApiResponse.error(e.getMessage()));
+    }
 
 
 }
