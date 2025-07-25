@@ -36,8 +36,7 @@ const SearchPartner: React.FC<SearchPartnerProps> = ({ partnerType, setPartner ,
         }
     },[partner]) 
 
-    console.log(partner)
-    console.log(displayValue)
+   
     useEffect(() => {
         if (searchKey && !selectedPartner) {
             refetch();
@@ -62,11 +61,20 @@ const SearchPartner: React.FC<SearchPartnerProps> = ({ partnerType, setPartner ,
         }
     } ,[])
 
+    const getDisplayValue = (selectedPartner: DistractedDynamicPartner) => {
+    const phones = selectedPartner.phoneNumbers
+        .map(phone => phone.number)
+        .join(" | ");
+        
+    return `${selectedPartner.partnerName} | ${phones}`;
+    };
+
+
     const handlePartnerSelect = (selectedPartner: DistractedDynamicPartner) => {
             justSelected.current = true; // Prevent immediate reopen
             setSelectedPartner(selectedPartner);
             setPartner(partners?.content.find((partner) => partner.id === selectedPartner.id));
-            setDisplayValue(selectedPartner.partnerName);
+            setDisplayValue(getDisplayValue(selectedPartner));
             setIsOpen(false);
            
     };

@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui";
 import { useGetPartnerById } from "@/services/api/partner/hooks";
-import { User, Building2, Mail, Phone, MapPin, Calendar, Hash, FileText } from "lucide-react";
+import { User, Building2, Phone, MapPin, Calendar, Hash, FileText } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
 
 
@@ -86,11 +86,7 @@ const PartnerDetails: React.FC = () => {
                   Informations de base
                 </h3>
                 <div className="space-y-3">
-                  <div className="flex items-center space-x-3">
-                    <Mail className="h-4 w-4 text-gray-400" />
-                    <span className="text-gray-600">Email :</span>
-                    <span className="text-gray-900 font-medium">{partner.email}</span>
-                  </div>
+                  
                   
                   {partner.entityType === 'PERSON' ? (
                     <>

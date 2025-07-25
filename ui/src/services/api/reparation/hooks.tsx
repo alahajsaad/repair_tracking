@@ -2,6 +2,7 @@ import { ApiResponse, Page } from "@/types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { GetReparationParams, Reparation, ReparationCreationDto } from "./types";
 import { addReparation, getCallNumber, getReparationByCallNumber, getReparationById, getReparations, getShouldBeDeliveredReparations, setDeliveredReparation, updateReparation } from "./api";
+import { useEffect } from "react";
 
 export const useAddReparation = () => {
    
@@ -53,21 +54,31 @@ export const useGetReparations = (params: GetReparationParams) => {
 
 
 export const useGetReparationByCallNumber = (callNumber: string) => {
-  return useQuery<Reparation, Error>({
-    queryKey: ['reparation', callNumber], 
+  const queryClient = useQueryClient();
+  
+  const query = useQuery<Reparation, Error>({
+    queryKey: ['reparation', callNumber],
     queryFn: () => getReparationByCallNumber(callNumber).then(response => {
       if (response.status === 'error') {
         throw new Error(response.message);
       }
       return response.data as Reparation;
     }),
-    enabled:false
-
-   
+    enabled: false,
   });
+
+  // Update cache when data is successfully fetched
+  useEffect(() => {
+    if (query.data?.id) {
+      queryClient.setQueryData(['reparation', query.data.id], query.data);
+    }
+  }, [query.data, queryClient]);
+
+  return query;
 };
 
 export const useGetReparationById = (id: number) => {
+ 
   return useQuery<Reparation, Error>({
     queryKey: ['reparation', id], 
     queryFn: () => getReparationById(id).then(response => {

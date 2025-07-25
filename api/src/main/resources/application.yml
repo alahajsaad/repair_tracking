@@ -17,3 +17,5 @@ app:
 
 jwt:
   secret: ${secret_key}
+
+

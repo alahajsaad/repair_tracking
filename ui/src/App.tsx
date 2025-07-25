@@ -4,7 +4,8 @@ import { Suspense, lazy } from 'react';
 import { Routes, Route, Navigate } from "react-router-dom";
 import { ToastContainer } from 'react-toastify';
 import { Paths } from './lib/Paths';
-import DashboardLayout from './utils/DashBoardLayout'; // layout is reused, no need to lazy load
+import DashboardLayout from './utils/DashBoardLayout'; 
+import LoadingPage from './utils/LoadingPage';
 
 const AddClientPage = lazy(() => import('./features/partner/pages/AddClientPage'));
 const PartnerDetails = lazy(() => import('./features/partner/pages/PartnerDetails'));
@@ -26,7 +27,7 @@ const CompanyPage = lazy(() => import('./features/company/CompanyPage'));
 function App() {
   return (
     <>
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={<LoadingPage />}>
     <Routes>
       <Route element={<DashboardLayout />}>
         {/* Par défaut, rediriger vers /clients */}

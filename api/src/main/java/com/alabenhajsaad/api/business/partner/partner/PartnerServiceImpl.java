@@ -7,6 +7,7 @@ import com.alabenhajsaad.api.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -16,7 +17,14 @@ public class PartnerServiceImpl implements PartnerService {
 
     @Override
     public Page<Partner> getPartners(Pageable pageable, String keyword, PartnerType type) {
-       return repository.findPartners(type,keyword,pageable) ;
+
+//        Specification<Partner> spec = Specification
+//                .where(PartnerSpecification.hasPartnerType(type))
+//                .and(PartnerSpecification.matchesSearchTerm(keyword));
+//
+//        return repository.findAll(spec, pageable);
+
+        return repository.findPartners(type,keyword,pageable) ;
     }
 
     @Override

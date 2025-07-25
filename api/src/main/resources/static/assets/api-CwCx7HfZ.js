@@ -1,0 +1,1 @@
+import{r,a as e}from"./request-DFzFQ-HD.js";const s=t=>r({url:"/partner",method:"get",params:t}),n=t=>r({url:`/partner/${t}`,method:"get"}),o=()=>e({url:"/partner/statistics",method:"get"});export{s as a,n as b,o as g};

@@ -1,4 +1,4 @@
-import { DynamicPartner, EntityType } from "@/services/api/partner/types";
+import { DynamicPartner, EntityType, PhoneNumber } from "@/services/api/partner/types";
 
 export const getStatusStyle = (status: string) => {
   switch (status) {
@@ -34,7 +34,8 @@ export type DistractedDynamicPartner = {
     id: number;
     partnerName: string;
     entityType: EntityType;
-    email: string;
+    phoneNumbers : PhoneNumber[]
+   
 }
 
 
@@ -51,8 +52,8 @@ export const getPartnerName = (partner: DynamicPartner): string => {
 export const getDistractedDynamicPartner = (partners: DynamicPartner[]): DistractedDynamicPartner[] => {
   return partners.map((partner) => ({
     id: partner.id,
-    partnerName: getPartnerName(partner),
+    partnerName:getPartnerName(partner),
     entityType: partner.entityType, 
-    email: partner.email,
+    phoneNumbers:partner.phoneNumbers
   }));
 };
