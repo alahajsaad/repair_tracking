@@ -18,6 +18,7 @@ export type Machine = {
 
 export type GetMachinesParams = {
     partnerId?:number
+    machineRef?:string
     page?:number
     size?:number
 }

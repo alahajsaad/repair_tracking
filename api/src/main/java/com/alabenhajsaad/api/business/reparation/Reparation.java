@@ -22,6 +22,7 @@ public class Reparation {
     private Integer id ;
     private String callNumber ;
     private String customerComplaint ;
+    private String machineRelatedItems ;
     private LocalDate entryDate ;
     private LocalDate releaseDate ;
     private Boolean shouldBeDelivered;

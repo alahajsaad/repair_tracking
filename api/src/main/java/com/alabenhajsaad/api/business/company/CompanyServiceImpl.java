@@ -8,6 +8,7 @@ import com.alabenhajsaad.api.exception.ResourceNotFoundException;
 import com.alabenhajsaad.api.fileManager.FileLoader;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -39,6 +40,7 @@ public class CompanyServiceImpl implements CompanyService {
         return mapperService.toCompanyResponseDto(repository.save(company));
     }
 
+    @Cacheable("company-activation")
     @Override
     public boolean isActivated() {
         Optional<Company> companyOpt = repository.findFirstByOrderByIdAsc();

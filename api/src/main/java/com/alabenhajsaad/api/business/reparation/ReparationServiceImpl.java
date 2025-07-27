@@ -1,8 +1,10 @@
 package com.alabenhajsaad.api.business.reparation;
 
 
+import com.alabenhajsaad.api.business.company.CompanyService;
 import com.alabenhajsaad.api.business.reparation.specification.ReparationSpecification;
 import com.alabenhajsaad.api.code_generator.CodeGenerator;
+import com.alabenhajsaad.api.exception.ExpiredFreePlan;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -20,9 +22,13 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class ReparationServiceImpl implements ReparationService {
     private final ReparationRepository repository ;
+    private final CompanyService companyService ;
 
     @Override
     public Reparation addReparation(Reparation reparation) {
+        if(!companyService.isActivated()){
+            throw new ExpiredFreePlan("Votre période d'essai est terminée. Veuillez contacter le fournisseur pour passer à une version payante.");
+        }
         reparation.setEntryDate(LocalDate.now());
         reparation.setRepairStatus(RepairStatus.IN_PROGRESS);
         reparation.setShouldBeDelivered(false);
@@ -45,6 +51,9 @@ public class ReparationServiceImpl implements ReparationService {
         if (!Objects.equals(oldReparation.getCustomerComplaint(), reparation.getCustomerComplaint())) {
             oldReparation.setCustomerComplaint(reparation.getCustomerComplaint());
         }
+        if (!Objects.equals(oldReparation.getMachineRelatedItems(), reparation.getMachineRelatedItems())) {
+            oldReparation.setMachineRelatedItems(reparation.getMachineRelatedItems());
+        }
 
         return repository.save(oldReparation);
     }
@@ -52,7 +61,7 @@ public class ReparationServiceImpl implements ReparationService {
 
     @Override
     public Reparation getReparationByCallNumber(String callNumber) {
-        return repository.findReparationByCallNumber(callNumber);
+        return repository.findByCallNumberIgnoreCase(callNumber);
     }
     @Override
     public Page<Reparation> getReparations(

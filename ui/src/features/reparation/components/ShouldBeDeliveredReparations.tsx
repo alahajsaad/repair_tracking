@@ -3,26 +3,26 @@ import { Check, Wrench, Phone, User, Settings } from "lucide-react";
 import { getPartnerName } from "./utils";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui";
-import useReparationReportPdf from "../hooks/useReparationReportPdf";
 import { Reparation } from "@/services/api/reparation/types";
+import { useReparationReport } from "../hooks/useReparationReportPdf";
 
 const ShouldBeDeliveredReparations: React.FC = () => {
     const { data: reparations, isPending } = useGetShouldBeDelivred();
     const { mutate: setIsDelivered } = useSetShouldBeDelivered();
   
     
-    const { isLoading, error ,setSelectedReparation} = useReparationReportPdf(); 
+    const { isLoading, error ,generateReport} = useReparationReport(); 
     const navigate = useNavigate()
 
     const handleClickPdfButton = (reparation: Reparation) => {
-        setSelectedReparation(reparation); 
+        generateReport(reparation); 
     };
     const handleMarkAsDelivered = (reparationId: number) => {
         setIsDelivered(reparationId);
     };
 
     return (
-        <div className="p-4">
+        <div>
             {isPending ? (
                 <div className="flex justify-center items-center py-8">
                     <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>

@@ -37,7 +37,7 @@ public class MachineController {
     }
 
     @GetMapping("client/{id}")
-    public  ResponseEntity<ApiResponse<List<Machine>>> getMachinesByClientId(@PathVariable int id){
+    public  ResponseEntity<ApiResponse<List<Machine>>> getMachinesByClientId(@PathVariable Long id){
         List<Machine> machines =  machineService.getMachinesByClientID(id) ;
         return ResponseEntity.ok(ApiResponse.success(machines)) ;
     }
@@ -45,11 +45,12 @@ public class MachineController {
     @GetMapping()
     public Page<Machine> getMachines(
             @RequestParam(required = false) Integer partnerId,
+            @RequestParam(required = false) String machineRef,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "8") int size
     ) {
         Pageable pageable = PageRequest.of(page, size);
-        return machineService.getReparations(partnerId,pageable);
+        return machineService.getReparations(partnerId,machineRef,pageable);
     }
 
     @DeleteMapping("{id}")
@@ -61,4 +62,5 @@ public class MachineController {
     public ResponseEntity<Long> getPartnerById() {
         return ResponseEntity.ok(machineService.getMachineCount());
     }
+
 }

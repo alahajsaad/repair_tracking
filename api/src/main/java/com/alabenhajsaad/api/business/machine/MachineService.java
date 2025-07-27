@@ -9,8 +9,8 @@ public interface MachineService {
     Machine addMachine(Machine machine) ;
     Machine updateMachine(Machine machine) ;
     Machine getMachineById(int id) ;
-    Page<Machine> getReparations(Integer partnerId, Pageable pageable);
-    List<Machine> getMachinesByClientID(int id) ;
+    Page<Machine> getReparations(Integer partnerId,String machineRef, Pageable pageable);
+    List<Machine> getMachinesByClientID(Long id) ;
     void deleteMachineById(Integer id);
     Long getMachineCount() ;
 

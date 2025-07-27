@@ -46,9 +46,10 @@ public class MachineServiceImpl implements MachineService {
     }
 
     @Override
-    public Page<Machine> getReparations(Integer partnerId, Pageable pageable) {
+    public Page<Machine> getReparations(Integer partnerId,String machineRef, Pageable pageable) {
         Specification<Machine> spec = Specification
-                .where(MachineSpecification.hasPartnerId(partnerId));
+                .where(MachineSpecification.hasPartnerId(partnerId))
+                .and(MachineSpecification.hasMachineRef(machineRef));
 
         if (pageable.getSort().isUnsorted()) {
             pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by(Sort.Direction.DESC, "id"));
@@ -58,9 +59,11 @@ public class MachineServiceImpl implements MachineService {
     }
 
     @Override
-    public List<Machine> getMachinesByClientID(int id) {
+    public List<Machine> getMachinesByClientID(Long id) {
         return repository.findMachinesByPartnerId(id);
     }
+
+
 
     public void deleteMachineById(Integer id) {
         List<Reparation> reparations = reparationService.getReparationByMachineId(id);

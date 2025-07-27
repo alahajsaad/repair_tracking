@@ -1,16 +1,18 @@
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button, Input } from "src/components/ui";
+import { Button } from "src/components/ui";
 import { z } from "zod";
 import { toast } from "react-toastify";
 import { Reparation, RepairStatus } from "@/services/api/reparation/types";
 import { useUpdateReparation } from "@/services/api/reparation/hooks";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/shadcn/radio-group";
 import { Label } from "@/components/ui/shadcn/label";
+import { Textarea } from "@/components/ui/shadcn/textarea";
 
 const formSchema = z.object({
-  customerComplaint: z.string().nonempty("La description ne peut pas être vide."),
-  repairStatus: z.enum(["ALL","IN_PROGRESS", "COMPLETED"]),
+  customerComplaint:z.string().nonempty("La description ne peut pas être vide."),
+  machineRelatedItems: z.string().optional(),
+  repairStatus:z.enum(["ALL","IN_PROGRESS", "COMPLETED"]),
 });
 
 type FormValues = z.infer<typeof formSchema>;
@@ -27,6 +29,7 @@ const UpdateReparationForm: React.FC<ReparationFormProps> = ({ toggleForm, initi
   const { register, handleSubmit, reset, control, formState: { errors } } = useForm<FormValues>({
     defaultValues: {
       customerComplaint: initialReparation.customerComplaint,
+      machineRelatedItems:initialReparation.machineRelatedItems,
       repairStatus: initialReparation.repairStatus as RepairStatus,
     },
     resolver: zodResolver(formSchema),
@@ -36,6 +39,7 @@ const UpdateReparationForm: React.FC<ReparationFormProps> = ({ toggleForm, initi
     const updatedReparation: Reparation = {
       ...initialReparation,
       customerComplaint: data.customerComplaint,
+      machineRelatedItems:data.machineRelatedItems,
       repairStatus: data.repairStatus,
     };
 
@@ -52,12 +56,34 @@ const UpdateReparationForm: React.FC<ReparationFormProps> = ({ toggleForm, initi
   return (
     <form className="space-y-6" onSubmit={handleSubmit(handleFormSubmit)}>
       <div>
-        <Input label="Description du problème *" {...register("customerComplaint")} />
-        {errors.customerComplaint && <p className="text-red-500">{errors.customerComplaint.message}</p>}
+        <Label htmlFor="customerComplaint" className="block mb-2 font-medium">
+          Description du problème
+        </Label>
+        <Textarea 
+          id="customerComplaint"
+          aria-label="Description du problème" 
+          placeholder="Décrivez le problème rencontré..."
+          {...register("customerComplaint")} 
+        />
+        {errors.customerComplaint && (
+          <p className="text-red-500 text-sm mt-1">{errors.customerComplaint.message}</p>
+        )}
       </div>
 
       <div>
-        <p className="mb-2 font-medium">Statut de réparation *</p>
+        <Label htmlFor="machineRelatedItems" className="block mb-2 font-medium">
+          Accessoires amenés par le client
+        </Label>
+        <Textarea 
+          id="machineRelatedItems"
+          aria-label="Accessoires amenés par le client" 
+          placeholder="Listez les accessoires ou pièces amenés par le client..."
+          {...register("machineRelatedItems")} 
+        />
+      </div>
+
+      <div>
+        <p className="mb-2 font-medium">Statut de réparation</p>
         <Controller
           name="repairStatus"
           control={control}

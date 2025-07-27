@@ -10,7 +10,7 @@ import java.util.List;
 
 
 public interface MachineRepository extends JpaRepository<Machine,Integer> {
-    List<Machine> findMachinesByPartnerId(int id) ;
+    List<Machine> findMachinesByPartnerId(Long id) ;
     Boolean existsByReference (String reference);
     Page<Machine> findAll(Specification<Machine> spec, Pageable pageable);
 }

@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8"/>
+    <title>Repair Ticket</title>
+    <style>
+        @page {
+            size: 148mm 210mm; /* A5 : largeur x hauteur */
+            margin: 10mm;
+
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 10px;
+            line-height: 1.4;
+            margin: 0;
+            padding: 0;
+            color: black;
+            width: 100%;
+        }
+
+        .header {
+            text-align: center;
+            border-bottom: 2px solid black;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+
+
+
+        .ticket-title {
+            text-align: center;
+            font-size: 14px;
+            font-weight: bold;
+            margin: 15px 0;
+            color: black;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+
+
+        .machine-client-container {
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        .machine-section, .client-section {
+            width: 48%;
+            display: inline-block;
+            vertical-align: top;
+        }
+
+        .machine-section {
+            margin-right: 4%;
+        }
+
+        .section-title {
+            font-weight: bold;
+            font-size: 11px;
+            color: black;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            border-bottom: 1px solid black;
+            padding-bottom: 3px;
+        }
+
+        .info-row {
+            width: 100%;
+            margin-bottom: 5px;
+        }
+
+        .info-label {
+            font-weight: bold;
+            width: 100px;
+            display: inline-block;
+            color: black;
+        }
+
+        .info-value {
+            color: black;
+        }
+
+        .call-number {
+            text-align: center;
+            font-size: 16px;
+            font-weight: bold;
+            color: black;
+            margin: 20px 0;
+            padding: 10px;
+            border: 2px solid black;
+        }
+
+        .complaint-section {
+            margin: 20px 0;
+        }
+
+        .complaint-text {
+            color: black;
+            min-height: 40px;
+            margin-top: 8px;
+            padding-left: 10px;
+            border-left: 2px solid black;
+        }
+
+
+
+        .footer {
+            margin-top: 30px;
+            border-top: 1px solid black;
+            padding-top: 15px;
+        }
+
+        .conditions-title {
+            font-weight: bold;
+            font-size: 10px;
+            margin-bottom: 5px;
+            color: black;
+        }
+
+        .conditions-footer {
+            font-size: 8px;
+            color: black;
+            line-height: 1.3;
+        }
+
+        .conditions-footer ul {
+            margin: 5px 0;
+            padding-left: 15px;
+        }
+
+        .conditions-footer li {
+            margin-bottom: 2px;
+        }
+
+        .separate-page {
+            page-break-before: always;
+            padding: 20px 0;
+        }
+
+        .conditions-separate {
+            font-size: 9px;
+            line-height: 1.4;
+            color: black;
+        }
+
+        .conditions-separate ul {
+            padding-left: 20px;
+        }
+
+        .conditions-separate li {
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+<!-- Header with Company Information -->
+<div class="header">
+    <div style="font-size: 16px; font-weight: bold; margin-bottom: 5px; color: black;">
+        <span th:text="${companyName}">Company Name</span> |
+        <span th:text="${companyAddress}">Adresse</span> |
+        <span th:text="${companyPhoneNumber}">Téléphone</span> |
+        <span th:text="${companyEmail}">Email</span>
+    </div>
+</div>
+
+<!-- Ticket Title -->
+<div class="ticket-title">Ticket de Réparation</div>
+
+<!-- Call Number -->
+<div class="call-number" th:text="'Appel N° ' + ${callNumber}">Appel N° 12345</div>
+
+<!-- Machine and Client Information Side by Side -->
+<div class="machine-client-container">
+    <!-- Machine Information -->
+    <div class="machine-section">
+        <div class="section-title">Informations Machine</div>
+        <div class="info-row">
+            <span class="info-label">Désignation:</span>
+            <span class="info-value" th:text="${machineDesignation}">Désignation Machine</span>
+        </div>
+        <div class="info-row">
+            <span class="info-label">Référence:</span>
+            <span class="info-value" th:text="${machineReference}">Référence Machine</span>
+        </div>
+        <div th:if="${machineRelatedItems != null and !machineRelatedItems.trim().isEmpty()}">
+            <div class="info-row" style="margin-top: 10px;">
+                <span class="info-label">Accessoires:</span>
+                <span class="info-value" th:text="${machineRelatedItems}">Accessoires avec machine</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Client Information -->
+    <div class="client-section">
+        <div class="section-title">Informations Client</div>
+        <div class="info-row">
+            <span class="info-label">Client:</span>
+            <span class="info-value" th:text="${clientName}">Nom Client</span>
+        </div>
+        <div class="info-row">
+            <span class="info-label">Date d'entrée:</span>
+            <span class="info-value" th:text="${#temporals.format(entryDate, 'dd/MM/yyyy')}">Date d'entrée</span>
+        </div>
+    </div>
+</div>
+
+<!-- Customer Complaint -->
+<div class="complaint-section">
+    <div class="section-title">Réclamation Client</div>
+    <div class="complaint-text" th:text="${complaint}">Description de la réclamation</div>
+</div>
+
+<!-- Footer with Conditions (if showing in footer) -->
+<div class="footer" th:if="${showConditionsInFooter}">
+    <div class="conditions-title">Conditions Générales:</div>
+    <div class="conditions-footer">
+        <ul>
+            <li th:each="condition : ${conditionsList}" th:text="${condition}">Condition</li>
+        </ul>
+    </div>
+</div>
+
+<!-- Separate Page for Conditions (if too many/long) -->
+<div class="separate-page" th:if="${showConditionsOnSeparatePage}">
+    <div class="header">
+        <div style="font-size: 16px; font-weight: bold; margin-bottom: 5px; color: black;">
+            <span th:text="${companyName}">Nom Entreprise</span> |
+            <span th:text="${companyAddress}">Adresse</span> |
+            <span th:text="${companyPhoneNumber}">Téléphone</span> |
+            <span th:text="${companyEmail}">Email</span>
+        </div>
+        <div style="font-size: 12px; margin-top: 10px; color: black;">Conditions Générales</div>
+    </div>
+
+    <div class="conditions-separate">
+        <ul>
+            <li th:each="condition : ${conditionsList}" th:text="${condition}">Condition</li>
+        </ul>
+    </div>
+</div>
+</body>
+</html>

@@ -54,7 +54,7 @@ const ReparationsFilter: React.FC = () => {
           </div>
 
           <div className="w-full lg:w-2/5">
-             <SelectMachine partner={partner} onSelect={onMachineSelect}/>
+             <SelectMachine partner={partner} onMachineSelect={onMachineSelect}/>
           </div>
           <div className="w-full lg:w-2/5">
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">

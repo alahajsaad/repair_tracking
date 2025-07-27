@@ -3,7 +3,11 @@ spring:
     pathMatch:
       matching-strategy: ant_path_matcher
   profiles:
-    active: prod
+    active: dev
+  cache:
+    type: caffeine
+    caffeine:
+      spec: maximumSize=100,expireAfterWrite=1d
 
 
 springdoc:

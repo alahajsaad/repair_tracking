@@ -6,16 +6,16 @@ import Label from "@/components/ui/Label";
 
 type SelectMachineProps = {
   partner: DynamicPartner | undefined;
-  onSelect: (machineId: number) => void; // callback to parent
+  onMachineSelect: (machineId: number) => void; // callback to parent
 }
 
-const SelectMachine: React.FC<SelectMachineProps> = ({ partner, onSelect }) => {
+const SelectMachine: React.FC<SelectMachineProps> = ({ partner, onMachineSelect }) => {
   const { data: machines } = useGetMachinesByClientId(partner?.id);
   const [selectedMachineId, setSelectedMachineId] = useState<string>("");
   const id = useId();
   const handleChange = (value: string) => {
     setSelectedMachineId(value);
-    onSelect(parseInt(value, 10));
+    onMachineSelect(parseInt(value, 10));
   };
 
 const isDisabled = !machines?.data || machines.data.length === 0;

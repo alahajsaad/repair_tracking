@@ -1,25 +1,52 @@
 import { Reparation } from "@/services/api/reparation/types";
-import { useGetReparationReport } from "@/services/pdfService";
-import { useCallback, useEffect, useState } from "react";
+import { useGetReparationReport, useGetReparationTicket } from "@/services/pdfService";
+import { useEffect, useState } from "react";
 
 
 
-function useReparationReportPdf() {
-    const [reparation,setReparation] = useState<Reparation>()
+// Hook for report PDF
+export function useReparationReport() {
+    const [reparation, setReparation] = useState<Reparation>();
     const { data: pdfBlob, isLoading, error } = useGetReparationReport(reparation?.id);
-
-    const setSelectedReparation = useCallback((reparation : Reparation)=>{
-        setReparation(reparation)
-    },[])
+    
+    const generateReport =(reparation: Reparation) => {
+        setReparation(reparation);
+       
+    };
+    
     useEffect(() => {
         if (pdfBlob) {
             const blobUrl = window.URL.createObjectURL(pdfBlob);
             window.open(blobUrl, "_blank", "noopener,noreferrer");
-            setReparation(undefined)
+            setReparation(undefined);
+            setTimeout(() => window.URL.revokeObjectURL(blobUrl), 1000);
         }
-    }, [pdfBlob]); 
-
-    return { isLoading, error ,setSelectedReparation};
+    }, [pdfBlob]);
+    
+    return { isLoading, error, generateReport };
 }
 
-export default useReparationReportPdf;
+// Hook for ticket PDF
+export function useReparationTicket() {
+    const [reparation, setReparation] = useState<Reparation>();
+    const { data: pdfBlob, isLoading, error } = useGetReparationTicket(reparation?.id);
+    
+    const generateTicket = (reparation: Reparation) => {
+        setReparation(reparation);
+    };
+    
+    useEffect(() => {
+        if (pdfBlob) {
+            const blobUrl = window.URL.createObjectURL(pdfBlob);
+            window.open(blobUrl, "_blank", "noopener,noreferrer");
+            setReparation(undefined);
+            setTimeout(() => window.URL.revokeObjectURL(blobUrl), 1000);
+        }
+    }, [pdfBlob]);
+    
+    return { isLoading, error, generateTicket };
+}
+
+
+
+

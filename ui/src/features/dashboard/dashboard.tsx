@@ -7,9 +7,9 @@ const Dashboard : React.FC = () => {
     return (
         <>
         <Statistics />
-        <Separator className="pt-4 pb-4" />
+        <Separator className="pt-3 pb-3" />
         <ReparationByCallNumberForm />
-        <Separator className="pt-4 pb-4" />
+        
         <ShouldBeDeliveredReparations />
         </>
     );

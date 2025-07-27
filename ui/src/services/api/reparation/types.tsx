@@ -4,6 +4,7 @@ import { ReparationDetail } from "../reparation_details/types"
 export type ReparationCreationDto = {
     callNumber:string
     customerComplaint:string
+    machineRelatedItems?:string
     machine:{
         id:number
     }
@@ -15,6 +16,7 @@ export type Reparation = {
     id:number
     callNumber:string
     customerComplaint:string
+    machineRelatedItems?:string
     entryDate:string
     releaseDate:string
     repairStatus:RepairStatus
